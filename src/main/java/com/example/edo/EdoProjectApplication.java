@@ -1,0 +1,22 @@
+package com.example.edo;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+
+@SpringBootApplication
+@ComponentScan
+@EnableAutoConfiguration
+
+public class EdoProjectApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(EdoProjectApplication.class, args);
+	}
+	//TODO: проверить работает ли скрипт
+	//TODO: сделать так чтобы на странице валидатора footer был снизу
+	//TODO: разобраться с css validator
+	//TODO: нужна ли мне бд? стоит попробовать использовать облако, потому что при загрузке данных в бд, записывается только путь к файлам, а если с другого пк попробуют запустить проект, то файлы не загрузятся
+
+}
