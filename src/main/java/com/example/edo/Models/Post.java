@@ -6,19 +6,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Getter;
 
+@Getter
 @Entity
 public class Post {
-    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Getter
     private String title;
     private String isChanged;
-
-    public String getIsChanged() {
-        return isChanged;
-    }
 
     public void setIsChanged(String isChanged) {
         this.isChanged = isChanged;
