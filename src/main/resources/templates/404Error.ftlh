@@ -1,13 +1,3 @@
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title> th:text = "${errorMessage}"</title>-->
-<!--</head>-->
-<!--<body>-->
-<!--  <p> th:text = "Find error ${errorMessage}" </p>-->
-<!--</body>-->
-<!--</html>-->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
