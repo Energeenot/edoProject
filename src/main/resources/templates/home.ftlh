@@ -5,12 +5,14 @@
 <!--    <meta name="keywords" content="эдо, электронный документооборот, пэп, электронная подпись, смс подпись, sms подпись, мобильная подпись">-->
 
     <title>НАЗВАНИЕ – простая электронная подпись по почте</title>
-    <link rel="stylesheet" href="/css/footer-page.css" th:href="@{/css/footer-page.css}">
-    <link rel="stylesheet" href="/css/header-page.css" th:href="@{/css/header-page.css}">
+    <link rel="stylesheet" type="text/css" href="/static/css/footer-page.css" th:href="@{/css/footer-page.css}"> <!--  -->
+    <link rel="stylesheet" type="text/css" href="/static/css/header-page.css" th:href="@{/css/header-page.css}">
 <!--    <link rel="stylesheet" href="/css/tyle.css" th:href="@{/css/syle.css}">-->
 </head>
 <body>
-<div th:insert="blocks/header :: header"></div>
+<#--<header th:insert="~{blocks/header :: header}"></header>-->
+<#import "blocks/header.ftlh" as header>
+<@header.header></@header.header>
 <div class="section-about">
     <h1 class="banner__title">
         <span class="banner_span">Cпециализированный сервис эдо для работы с физлицами</span>
@@ -34,6 +36,8 @@
     </div>
 </div>
 
-<div th:insert="blocks/footer :: footer"></div>
+<#--<footer th:insert="~{blocks/footer :: footer}"></footer>-->
+<#import "blocks/footer.ftlh" as footer>
+<@footer.footer></@footer.footer>
 </body>
 </html>
