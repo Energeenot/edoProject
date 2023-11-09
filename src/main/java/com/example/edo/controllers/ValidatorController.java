@@ -1,7 +1,7 @@
 package com.example.edo.controllers;
 
 import com.example.edo.Models.Post;
-import com.example.edo.repo.PostRepository;
+import com.example.edo.repositories.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,8 +17,8 @@ public class ValidatorController {
     public String validator(Model model){
         // скорее всего надо поменять findAll чтобы найти только определённые документы
         // findAllById мне кажется подойдёт или просто findById
-        Iterable<Post> posts = postRepository.findAll();
-        model.addAttribute("posts", posts);
+//        Iterable<Post> posts = postRepository.findAll();
+//        model.addAttribute("posts", posts);
         return "validator";
     }
 
@@ -26,6 +26,7 @@ public class ValidatorController {
     public String validatorAdd(Model model){
         return "validator-add";
     }
+
     @PostMapping("/validator/add")
     public String validatorPostAdd(@RequestParam String title, @RequestParam String isChanged, Model model){
         Post post = new Post(title, isChanged);
