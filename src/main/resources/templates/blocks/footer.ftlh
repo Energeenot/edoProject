@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../../static/css/footer-page.css" th:href="@{../../static/css/footer-page.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/footer-page.css}">
 </head>
 <body>
-<div th:fragment="footer">
+<#macro footer>
     <footer class="footer">
         <footer class="footer-page">
             <div class="container">
@@ -13,6 +13,9 @@
             </div>
         </footer>
     </footer>
-</div>
+</#macro>
+<#--<div th:fragment="footer">-->
+<#--    -->
+<#--</div>-->
 </body>
 </html>

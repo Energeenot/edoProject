@@ -17,7 +17,6 @@
         <input type="text" name="isChanged" placeholder="Введите название"><br>
         <button type="submit">Добавить</button>
     </form>
-
 </div>
 <footer th:insert="blocks/footer ::footer"></footer>
 </body>
