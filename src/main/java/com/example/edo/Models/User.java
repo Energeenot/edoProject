@@ -2,6 +2,7 @@ package com.example.edo.Models;
 
 import com.example.edo.Models.enums.Role;
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +13,8 @@ import java.util.Set;
 
 @Getter
 @Entity
+@Table(name="user")
+@Data
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +36,10 @@ public class User implements UserDetails {
 
     public void setMail(String mail) {
         this.mail = mail;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setPassword(String password) {
