@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Авторизация</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/footer-page.css" th:href="@{/css/footer-page.css}"> <!--  -->
+    <link rel="stylesheet" type="text/css" href="/static/css/header-page.css" th:href="@{/css/header-page.css}">
+
 </head>
 <body>
 <#import "blocks/header.ftlh" as header>
