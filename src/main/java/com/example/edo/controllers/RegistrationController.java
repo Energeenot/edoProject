@@ -34,7 +34,7 @@ public class RegistrationController {
             session.setAttribute("successMessage", "Успешная регистрация");
             return "redirect:/login";
         }else {
-            model.addAttribute("errorMessage", "Ошибка");
+            model.addAttribute("errorMessage", "Аккаунт с такой почтой уже есть");
             return "registration";
         }
 
