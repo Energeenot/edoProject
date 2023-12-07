@@ -24,10 +24,7 @@ public class UserService {
 
         } else {
             String mail = user.getMail();
-            System.out.println(mail);
-            System.out.println(user.getName());
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            System.out.println(passwordEncoder.encode(user.getPassword()));
             user.getRoles().add(Role.ROLE_student);
             log.info("Saving new User with email: {}", mail);
             userRepository.save(user);
