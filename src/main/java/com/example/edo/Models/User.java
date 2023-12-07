@@ -29,6 +29,10 @@ public class User implements UserDetails {
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<Role> roles = new HashSet<>();
+    @Column(name = "numberGroup")
+    private String numberGroup;
+    @Column(name = "teacherMail")
+    private String teacherMail;
 
     public void setId(long id) {
         this.id = id;
