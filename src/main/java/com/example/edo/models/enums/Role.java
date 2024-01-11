@@ -1,4 +1,4 @@
-package com.example.edo.Models.enums;
+package com.example.edo.models.enums;
 
 import org.springframework.security.core.GrantedAuthority;
 
