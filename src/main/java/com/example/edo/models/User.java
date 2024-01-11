@@ -1,6 +1,6 @@
-package com.example.edo.Models;
+package com.example.edo.models;
 
-import com.example.edo.Models.enums.Role;
+import com.example.edo.models.enums.Role;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -31,8 +31,6 @@ public class User implements UserDetails {
     private Set<Role> roles = new HashSet<>();
     @Column(name = "numberGroup")
     private String numberGroup;
-    @Column(name = "teacherMail")
-    private String teacherMail;
 
     public void setId(long id) {
         this.id = id;
