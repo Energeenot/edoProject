@@ -22,26 +22,37 @@
                                     <span class="header-page_text">Главная</span>
                                 </a>
                             </li>
-                            <li class="header-page_li">
-                                <a class="header-page_link" href="/validator">  <!-- data-scroll-to = "section-contacts" -->
-                                    <span class="header-page_text">Валидатор</span>
-                                </a>
-                            </li>
-                            <li class="header-page_li">
-                                <a class="header-page_link" href="/validator/add"> <!--data-scroll-to = "section-about"> -->
-                                    <span class="header-page_text">Новый документ</span>
-                                </a>
-                            </li>
-                            <li class="header-page_li">
-                                <a class="header-page_link" href="/login"> <!--data-scroll-to = "section-catalog" -->
-                                    <span class="header-page_text">Вход</span>
-                                </a>
-                            </li>
-                            <li class="header-page_li">
-                                <a class="header-page_link" href="/registration"> <!--data-scroll-to = "section-about"> -->
-                                    <span class="header-page_text">Регистрация</span>
-                                </a>
-                            </li>
+                            <#if user??>
+                                <li class="header-page_li">
+                                    <a class="header-page_link" href="/validator">  <!-- data-scroll-to = "section-contacts" -->
+                                        <span class="header-page_text">Валидатор</span>
+                                    </a>
+                                </li>
+                                <li class="header-page_li">
+                                    <a class="header-page_link" href="/validator-add"> <!--data-scroll-to = "section-about"> -->
+                                        <span class="header-page_text">Новый документ</span>
+                                    </a>
+                                </li>
+                                <li class="header-page_li">
+                                    <a class="header-page_link" href="/personalAccount">
+                                        <span class="header-page_text">Личный кабинет</span>
+                                    </a>
+                                </li>
+
+                            <#else>
+                                <li class="header-page_li">
+                                    <a class="header-page_link" href="/login"> <!--data-scroll-to = "section-catalog" -->
+                                        <span class="header-page_text">Вход</span>
+                                    </a>
+                                </li>
+                                <li class="header-page_li">
+                                    <a class="header-page_link" href="/registration"> <!--data-scroll-to = "section-about"> -->
+                                        <span class="header-page_text">Регистрация</span>
+                                    </a>
+                                </li>
+                            </#if>
+
+
                             <!--                            <li class="header-page_li">-->
                             <!--                                <a class="header-page_link" href="#">-->
                             <!--                                    <span class="header-page_text" data-popup="popup-order">Корзина</span>-->
