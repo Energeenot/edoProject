@@ -1,6 +1,6 @@
 package com.example.edo.controllers;
 
-import com.example.edo.Models.User;
+import com.example.edo.models.User;
 import com.example.edo.repositories.UserRepository;
 import com.example.edo.services.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
