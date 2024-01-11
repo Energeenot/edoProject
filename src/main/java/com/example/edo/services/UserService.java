@@ -1,7 +1,7 @@
 package com.example.edo.services;
 
-import com.example.edo.Models.User;
-import com.example.edo.Models.enums.Role;
+import com.example.edo.models.User;
+import com.example.edo.models.enums.Role;
 import com.example.edo.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
