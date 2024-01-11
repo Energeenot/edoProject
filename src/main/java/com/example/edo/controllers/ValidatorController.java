@@ -1,6 +1,6 @@
 package com.example.edo.controllers;
 
-import com.example.edo.Models.Post;
+import com.example.edo.models.Post;
 import com.example.edo.repositories.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,17 +20,5 @@ public class ValidatorController {
 //        Iterable<Post> posts = postRepository.findAll();
 //        model.addAttribute("posts", posts);
         return "validator";
-    }
-
-    @GetMapping("/validator/add")
-    public String validatorAdd(Model model){
-        return "validator-add";
-    }
-
-    @PostMapping("/validator/add")
-    public String validatorPostAdd(@RequestParam String title, @RequestParam String isChanged, Model model){
-        Post post = new Post(title, isChanged);
-        postRepository.save(post);
-        return "redirect:/validator";
     }
 }
