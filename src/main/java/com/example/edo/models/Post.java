@@ -1,4 +1,4 @@
-package com.example.edo.Models;
+package com.example.edo.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
