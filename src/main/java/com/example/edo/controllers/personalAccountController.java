@@ -1,9 +1,8 @@
 package com.example.edo.controllers;
 
-import com.example.edo.Models.User;
+import com.example.edo.models.User;
 import com.example.edo.repositories.UserRepository;
 import com.example.edo.services.UserService;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -31,14 +30,12 @@ public class personalAccountController {
             @RequestParam String name,
             @RequestParam String mail,
             @RequestParam String numberGroup,
-            @RequestParam String teacherMail,
             Model model){
         User user = userRepository.findByMail(mail);
         model.addAttribute("user", user);
         user.setName(name);
         user.setMail(mail);
         user.setNumberGroup(numberGroup);
-        user.setTeacherMail(teacherMail);
         userRepository.saveAndFlush(user);
         return "personalAccount";
     }
