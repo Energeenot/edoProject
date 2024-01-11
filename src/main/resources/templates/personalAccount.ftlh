@@ -15,14 +15,16 @@
     <div class="container-personalData">
 <#--        <h2>${user.name}</h2>-->
 <#--        <h2>${user.mail}</h2>-->
-        ФИО пользователя: <input type="text" name="name" value="${user.name}"><br>
-        Эл. почта <input type="email" name="mail" value="${user.mail}"><br>
+        <#if user.name??>
+            ФИО пользователя: <input type="text" name="name" value="${user.name}"><br>
+            Эл. почта <input type="email" name="mail" value="${user.mail}"><br>
+        </#if>
+
+<#--        если у пользователя есть номер группы, то отображаем следующие строки-->
         <#if user.numberGroup??>
             № группы <input type="text" name="numberGroup" value="${user.numberGroup}"><br>
-            Эл. почта преподавателя <input type="email" name="teacherMail" value="${user.teacherMail}"><br>
         <#else>
             № группы <input type="text" name="numberGroup"><br>
-            Эл. почта преподавателя <input type="email" name="teacherMail"><br>
         </#if>
 
         <input type="hidden" name="_csrf" value="${_csrf.token}">
