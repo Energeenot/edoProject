@@ -19,16 +19,13 @@
 
 <div class="container-validator">
     <h1>Валидатор</h1>
-    <div class="input-field">
-        <label class="input">
-            <span class="input__title">Введите код</span>
-            <input type="text" id="kod" class="input_kod" name="" placeholder="kod" autofocus="" aria-required="true" aria-invalid="true">
-        </label>
+    <form action="/validator" method="post">
+        <span class="input__title">Введите код</span>
+        <input type="text" id="kod" class="input_kod" name="uniqueGroupCode" placeholder="kod" autofocus="" aria-required="true" aria-invalid="true">
         <div class="help-block"><p class="help-block help-block-error">Для получения документов необходимо ввести код.</p></div>
-    </div>
-    <div class="btn">
+        <input type="hidden" name="_csrf" value="${_csrf.token}">
         <button type="submit" class="submit">Найти</button>
-    </div>
+    </form>
 
 <!--    код для получения данных-->
 <#--<!--    <div th:each="element :${posts}" class="doc">&ndash;&gt;-->
@@ -38,14 +35,14 @@
 <!--    </div>-->
 
 </div>
-<form id="upload-container" method="POST" action="send.php">
-    <img id="upload-image" src="/images/upload.svg" th:href="@{/images/upload.svg}">
-    <div>
-        <input id="file-input" type="file" name="file" multiple>
-        <label for="file-input">Выберите файл</label>
-        <span>или перетащите его сюда</span>
-    </div>
-</form>
+<#--<form id="upload-container" method="POST" action="send.php">-->
+<#--    <img id="upload-image" src="/images/upload.svg" th:href="@{/images/upload.svg}">-->
+<#--    <div>-->
+<#--        <input id="file-input" type="file" name="file" multiple>-->
+<#--        <label for="file-input">Выберите файл</label>-->
+<#--        <span>или перетащите его сюда</span>-->
+<#--    </div>-->
+<#--</form>-->
 <#--<footer th:insert="~{blocks/footer :: footer}"></footer>-->
 <#import "blocks/footer.ftlh" as footer>
 <@footer.footer></@footer.footer>
