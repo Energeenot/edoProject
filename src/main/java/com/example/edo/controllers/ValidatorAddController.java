@@ -1,7 +1,9 @@
 package com.example.edo.controllers;
 
+import com.example.edo.mailSender.Sender;
 import com.example.edo.models.User;
 import com.example.edo.repositories.FilesRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -30,16 +32,14 @@ public class ValidatorAddController {
     private static String UPLOAD_FOLDER = "src/main/webapp/uploads/";
     @Autowired
     private FilesRepository filesRepository;
+    Sender sender = new Sender();
     @GetMapping("/validator-add")
     public String validatorAdd(Model model){
         return "validator-add";
     }
 
     @PostMapping("/validator-add")
-    public String uploadFile(@RequestParam("file") List<MultipartFile> files, Model model, Authentication authentication) {
-//        List<String> groupName = new ArrayList<>();
-//        String groupNameCode;
-//        StringBuilder stringBuilder = new StringBuilder();
+    public String uploadFile(@RequestParam("file") List<MultipartFile> files, Model model, Authentication authentication, HttpServletRequest request) {
         String uniqueID = UUID.randomUUID().toString();
 
         if (files.isEmpty()) {
@@ -89,6 +89,7 @@ public class ValidatorAddController {
                 User currentUser = (User) authentication.getPrincipal();
                 newFiles.setSender(currentUser);
                 filesRepository.save(newFiles);
+                
             } else {
                 // Обработка ситуации, когда Authentication или Principal равны null
                 return "redirect:/login";
@@ -101,10 +102,16 @@ public class ValidatorAddController {
                 throw new RuntimeException(e);
             }
         }
+
+        //todo: выключить впн перед отправкой письма
+        String teacherMail = request.getParameter("teacherMail");
+        if (teacherMail != null){
+            sender.sendNotificationOfNewDocuments(uniqueID, teacherMail);
+        }
+
 //        groupNameCode = stringBuilder.toString();
 
         return "validator-add";
     }
-
-
+    
 }
