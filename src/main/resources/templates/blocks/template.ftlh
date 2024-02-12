@@ -1,4 +1,4 @@
-<#macro template>
+<#macro template user>
     <!DOCTYPE html>
     <html lang="ru">
     <head>
@@ -12,9 +12,9 @@
         <header class="header-page">
             <div class="container header-page_container">
                 <div class="header-page_start">
-<#--                    <div class="logo">-->
-<#--                        <img class="logo_img" src="img/common/logo.svg" alt="" width="60" height="60">-->
-<#--                    </div>-->
+                    <#--                    <div class="logo">-->
+                    <#--                        <img class="logo_img" src="img/common/logo.svg" alt="" width="60" height="60">-->
+                    <#--                    </div>-->
                 </div>
                 <div class="header-page_end">
                     <nav class="header-page_nav">
@@ -24,35 +24,39 @@
                                     <span class="header-page_text">Главная</span>
                                 </a>
                             </li>
-                            <li class="header-page_li">
-                                <a class="header-page_link" href="/validator">
-                                    <!-- data-scroll-to = "section-contacts" -->
-                                    <span class="header-page_text">Валидатор</span>
-                                </a>
-                            </li>
-                            <li class="header-page_li">
-                                <a class="header-page_link" href="/validator-add">
-                                    <!--data-scroll-to = "section-about"> -->
-                                    <span class="header-page_text">Новый документ</span>
-                                </a>
-                            </li>
-                            <li class="header-page_li">
-                                <a class="header-page_link" href="/personalAccount">
-                                    <span class="header-page_text">Личный кабинет</span>
-                                </a>
-                            </li>
+                            <#if user.isStudent() || user.isTeacher()>
+                                <li class="header-page_li">
+                                    <a class="header-page_link" href="/validator">
+                                        <!-- data-scroll-to = "section-contacts" -->
+                                        <span class="header-page_text">Валидатор</span>
+                                    </a>
+                                </li>
+                                <li class="header-page_li">
+                                    <a class="header-page_link" href="/validator-add">
+                                        <!--data-scroll-to = "section-about"> -->
+                                        <span class="header-page_text">Новый документ</span>
+                                    </a>
+                                </li>
+                                <li class="header-page_li">
+                                    <a class="header-page_link" href="/personalAccount">
+                                        <span class="header-page_text">Личный кабинет</span>
+                                    </a>
+                                </li>
+                            <#else>
 
-                            <li class="header-page_li">
-                                <a class="header-page_link" href="/login"> <!--data-scroll-to = "section-catalog" -->
-                                    <span class="header-page_text">Вход</span>
-                                </a>
-                            </li>
-                            <li class="header-page_li">
-                                <a class="header-page_link" href="/registration">
-                                    <!--data-scroll-to = "section-about"> -->
-                                    <span class="header-page_text">Регистрация</span>
-                                </a>
-                            </li>
+                                <li class="header-page_li">
+                                    <a class="header-page_link" href="/login">
+                                        <!--data-scroll-to = "section-catalog" -->
+                                        <span class="header-page_text">Вход</span>
+                                    </a>
+                                </li>
+                                <li class="header-page_li">
+                                    <a class="header-page_link" href="/registration">
+                                        <!--data-scroll-to = "section-about"> -->
+                                        <span class="header-page_text">Регистрация</span>
+                                    </a>
+                                </li>
+                            </#if>
 
 
                             <!--                            <li class="header-page_li">-->
@@ -80,6 +84,7 @@
                 </div>
             </div>
         </div>
+
     </div>
     </body>
     </html>
