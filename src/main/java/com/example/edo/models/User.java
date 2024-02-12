@@ -77,4 +77,12 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public boolean isStudent(){
+        return roles.contains(Role.ROLE_student);
+    }
+
+    public boolean isTeacher(){
+        return roles.contains(Role.ROLE_teacher);
+    }
 }
