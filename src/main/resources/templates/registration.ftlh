@@ -1,25 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Регистрация</title>
-    <link rel="stylesheet" type="text/css" href="/static/css/footer-page.css" th:href="@{/css/footer-page.css}"> <!--  -->
-    <link rel="stylesheet" type="text/css" href="/static/css/header-page.css" th:href="@{/css/header-page.css}">
 </head>
-<body>
-<#import "blocks/header.ftlh" as header>
-<@header.header></@header.header>
+<#import "blocks/template.ftlh" as template>
+<@template.template user>
+    <form action="/registration" method="post">
+        ФИО пользователя: <input type="text" name="name"><br>
+        Эл. почта <input type="email" name="mail"><br>
+        Пароль: <input type="password" name="password"><br>
+        <input type="hidden" name="_csrf" value="${_csrf.token}">
+        <input type="submit" value="Зарегистрироваться">
+    </form>
+    <#if errorMessage??>
+        <h2 style="color: red">${errorMessage}</h2>
+    </#if>
+</@template.template>
 
-<form action="/registration" method="post">
-    ФИО пользователя: <input type="text" name="name"><br>
-    Эл. почта <input type="email" name="mail"><br>
-    Пароль: <input type="password" name="password"><br>
-    <input type="hidden" name="_csrf" value="${_csrf.token}">
-    <input type="submit" value="Зарегистрироваться">
-</form>
-<#if errorMessage??>
-    <h2 style="color: red">${errorMessage}</h2>
-</#if>
+
 <#--<div class="container">-->
 <#--    <div th:if="${param.error}">-->
 <#--        Invalid username and password-->
@@ -46,8 +43,3 @@
 <#--    </label>-->
 <#--    <div class="help-block"><p class="help-block help-block-error">Для регистрации необходимо ввести пароль.</p></div>-->
 <#--</div>-->
-
-<#import "blocks/footer.ftlh" as footer>
-<@footer.footer></@footer.footer>
-</body>
-</html>

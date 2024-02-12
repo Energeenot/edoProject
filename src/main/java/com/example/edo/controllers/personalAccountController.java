@@ -20,8 +20,7 @@ public class personalAccountController {
 
     @GetMapping("/personalAccount")
     public String personalAccount(Principal principal, Model model){
-        User user = userService.getUserByPrincipal(principal);
-        model.addAttribute("user", user);
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
         return "personalAccount";
     }
 

@@ -11,6 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.security.Principal;
+
 @Controller
 @RequiredArgsConstructor
 public class RegistrationController {
@@ -19,8 +21,9 @@ public class RegistrationController {
     private UserRepository userRepository;
 
     @GetMapping("/registration")
-    public String registration(Model model){
+    public String registration(Model model, Principal principal){
         model.addAttribute("title", "Страница регистрации");
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
         return "registration";
 
     }

@@ -3,7 +3,9 @@ package com.example.edo.controllers;
 import com.example.edo.mailSender.Sender;
 import com.example.edo.models.User;
 import com.example.edo.repositories.FilesRepository;
+import com.example.edo.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -21,26 +23,32 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
 @Controller
+@RequiredArgsConstructor
 public class ValidatorAddController {
+    private final UserService userService;
 
     private static String UPLOAD_FOLDER = "src/main/webapp/uploads/";
     @Autowired
     private FilesRepository filesRepository;
     Sender sender = new Sender();
     @GetMapping("/validator-add")
-    public String validatorAdd(Model model){
+    public String validatorAdd(Model model, Principal principal){
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
         return "validator-add";
     }
 
     @PostMapping("/validator-add")
-    public String uploadFile(@RequestParam("file") List<MultipartFile> files, Model model, Authentication authentication, HttpServletRequest request) {
+    public String uploadFile(@RequestParam("file") List<MultipartFile> files, Model model, Authentication authentication, HttpServletRequest request, Principal principal) {
+        model.addAttribute(userService.getUserByPrincipal(principal));
         String uniqueID = UUID.randomUUID().toString();
+
 
         if (files.isEmpty()) {
             model.addAttribute("message", "Please select a file to upload");

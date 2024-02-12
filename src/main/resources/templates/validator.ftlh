@@ -1,22 +1,9 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ru">
 <head>
-    <meta charset="UTF-8">
     <title>Валидатор</title>
     <link rel="stylesheet" type="text/css" href="/static/css/validator.css" th:href="@{/css/validator.css}">
-    <link rel="stylesheet" type="text/css" href="/static/css/header-page.css" th:href="@{/css/header-page.css}">
-    <link rel="stylesheet" type="text/css" href="/static/css/footer-page.css" th:href="@{/css/footer-page.css}">
-<#-- надо настроить так же как настраивал до этого css
-<script type="text/javascript" th:src="@{/static/js/script.js}" src="/js/script.js"></script>-->
-<#--    <script type="text/javascript" th:src="@{/static/js/jquery-3.3.1.min.js}" src="/js/jquery-3.3.1.min.js"></script>-->
-<!--    <script type="text/javascript" src="../static/js/jquery-3.3.1.min.js"></script>-->
-<!--    <script type="text/javascript" src="../static/js/script.js"></script>-->
 </head>
-<body>
-<#--<header th:insert="~{blocks/header :: header}"></header>-->
-<#import "blocks/header.ftlh" as header>
-<@header.header></@header.header>
-
+<#import "blocks/template.ftlh" as template>
+<@template.template user>
 <div class="container-validator">
     <h1>Валидатор</h1>
     <form action="/validator" method="post">
@@ -26,6 +13,10 @@
         <input type="hidden" name="_csrf" value="${_csrf.token}">
         <button type="submit" class="submit">Найти</button>
     </form>
+</div>
+</@template.template>
+
+
 
 <!--    код для получения данных-->
 <#--<!--    <div th:each="element :${posts}" class="doc">&ndash;&gt;-->
@@ -34,7 +25,6 @@
 <#--<!--        <a th:href="'/validator/' + ${element.id}">Детальнее</a>&ndash;&gt;-->
 <!--    </div>-->
 
-</div>
 <#--<form id="upload-container" method="POST" action="send.php">-->
 <#--    <img id="upload-image" src="/images/upload.svg" th:href="@{/images/upload.svg}">-->
 <#--    <div>-->
@@ -44,7 +34,3 @@
 <#--    </div>-->
 <#--</form>-->
 <#--<footer th:insert="~{blocks/footer :: footer}"></footer>-->
-<#import "blocks/footer.ftlh" as footer>
-<@footer.footer></@footer.footer>
-</body>
-</html>

@@ -3,7 +3,9 @@ package com.example.edo.controllers;
 import com.example.edo.models.Files;
 import com.example.edo.repositories.PostRepository;
 import com.example.edo.services.FilesService;
+import com.example.edo.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -17,29 +19,30 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.nio.file.Path;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 public class ValidatorController {
-    @Autowired
+
+    private final UserService userService;
     private PostRepository postRepository;
     private final FilesService filesService;
 
-    @Autowired
-    public ValidatorController(FilesService filesService) {
-        this.filesService = filesService;
-    }
 
     @GetMapping("/validator")
-    public String validator(Model model){
+    public String validator(Model model, Principal principal){
         // скорее всего надо поменять findAll чтобы найти только определённые документы
         // findAllById мне кажется подойдёт или просто findById
 //        Iterable<Post> posts = postRepository.findAll();
 //        model.addAttribute("posts", posts);
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
         return "validator";
     }
 
+    // работает на загркзку одного файла, но когда больше выкидывает ошибку ERR_RESPONSE_HEADERS_MULTIPLE_CONTENT_DISPOSITION
     @PostMapping("/validator")
     public ResponseEntity<Resource> downloadFiles(HttpServletRequest request) {
         List<String> fileNames = searchNameFiles(request);
