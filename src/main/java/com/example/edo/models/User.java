@@ -2,6 +2,10 @@ package com.example.edo.models;
 
 import com.example.edo.models.enums.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,10 +24,16 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
     private long id;
+    @NotEmpty(message = "Поле ФИО быть заполнено")
+//    @Size(min = 2, max = 45, message = "Минимальная длина фио 2 символа")
     @Column(name = "name")
     private String name;
+    @NotEmpty(message = "Поле эл. почта быть заполнено")
+//    @Email(message = "Введите корректный почтовый адрес")
     @Column(name = "mail", unique = true)
     private String mail;
+    @NotEmpty(message = "Поле пароль должно быть заполнено")
+//    @Min(value = 8, message = "Пароль должен содержать минимум 8 символов")
     @Column(name = "password")
     private String password;
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
