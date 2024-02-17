@@ -5,9 +5,33 @@
 <#import "blocks/template.ftlh" as template>
 <@template.template user>
     <form action="/registration" method="post">
-        ФИО пользователя: <input type="text" name="name"><br>
-        Эл. почта <input type="email" name="mail"><br>
+        ФИО пользователя: <input type="text" name="name" class="${(nameError??)?string('is-invalid', '')}" value="<#if user.name??>${user.name}</#if>"><br>
+        <#if nameError??>
+            <div style="color: red" class = "invalid-feedback">
+                ${nameError}
+            </div>
+        </#if>
+<#--        <#if bindingResult.hasFieldErrors("name")??>-->
+<#--            <span style="color: red">${bindingResult.getFieldError("name").defaultMessage}</span><br>-->
+<#--        </#if>-->
+        Эл. почта <input type="email" name="mail" value="<#if user.mail??>${user.mail}</#if>"><br>
+        <#if mailError??>
+            <div style="color: red" class="invalid-feedback">
+                ${mailError}
+            </div>
+        </#if>
+<#--        <#if bindingResult.hasFieldErrors("mail")??>-->
+<#--            <span style="color: red">${bindingResult.getFieldError("mail").defaultMessage}</span><br>-->
+<#--        </#if>-->
         Пароль: <input type="password" name="password"><br>
+        <#if passwordError??>
+            <div style="color: red" class="invalid-feedback">
+                ${passwordError}
+            </div>
+        </#if>
+<#--        <#if bindingResult.hasFieldErrors("password")??>-->
+<#--            <span style="color: red">${bindingResult.getFieldError("password").defaultMessage}</span><br>-->
+<#--        </#if>-->
         <input type="hidden" name="_csrf" value="${_csrf.token}">
         <input type="submit" value="Зарегистрироваться">
     </form>
