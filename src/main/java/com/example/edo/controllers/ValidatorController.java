@@ -1,12 +1,12 @@
 package com.example.edo.controllers;
 
-import com.example.edo.models.Files;
 import com.example.edo.repositories.PostRepository;
 import com.example.edo.services.FilesService;
 import com.example.edo.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -15,13 +15,20 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Controller
 @RequiredArgsConstructor
@@ -42,9 +49,16 @@ public class ValidatorController {
         return "validator";
     }
 
-    // работает на загркзку одного файла, но когда больше выкидывает ошибку ERR_RESPONSE_HEADERS_MULTIPLE_CONTENT_DISPOSITION
     @PostMapping("/validator")
-    public ResponseEntity<Resource> downloadFiles(HttpServletRequest request) {
+    public ResponseEntity<Resource> downloadFiles(HttpServletRequest request, Model model) {
+        if (request.getParameter("uniqueGroupCode").isEmpty()){
+            HttpHeaders headers = new HttpHeaders();
+//            headers.add("errorMessage", "Enter the code from letter");
+            model.addAttribute("message", "Введите код из письма");
+            return ResponseEntity.status(HttpStatus.FOUND).headers(headers)
+                    .location(URI.create("validator")).build();
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
         List<String> fileNames = searchNameFiles(request);
         List<Resource> resources = new ArrayList<>();
 
@@ -56,35 +70,33 @@ public class ValidatorController {
             }
 
             HttpHeaders headers = new HttpHeaders();
-            for (String fileName : fileNames) {
-                headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileName);
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=download.zip"); // Используйте любое имя файла
+
+            // Создаем временный файл для сохранения всех файлов в виде zip
+            Path tempZipFile = java.nio.file.Files.createTempFile("files", ".zip");
+            try (ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(tempZipFile.toFile()))) {
+                for (Resource resource : resources) {
+                    ZipEntry zipEntry = new ZipEntry(resource.getFilename());
+                    zipOutputStream.putNextEntry(zipEntry);
+                    StreamUtils.copy(resource.getInputStream(), zipOutputStream);
+                    zipOutputStream.closeEntry();
+                }
             }
+
+            // Читаем временный файл и возвращаем его как ресурс
+            ByteArrayResource zipResource = new ByteArrayResource(java.nio.file.Files.readAllBytes(tempZipFile));
+
+            // Удаляем временный файл после использования
+            Files.deleteIfExists(tempZipFile);
+
             return ResponseEntity.ok()
                     .headers(headers)
                     .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                    .body(resources.get(0)); // Тут выбираем первый ресурс из списка (можно подстроить под вашу логику)
+                    .body(zipResource);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-
-
-//        List<Resource> resources = new ArrayList<>();
-//        List<String> fileNames = searchNameFiles(request);
-//        FileSystemResource resource = null;
-//        for (String fileName : fileNames) {
-//            Path filePath = filesService.getFilePathByName(fileName);
-//            resource = new FileSystemResource(filePath);
-//            resources.add(resource);
-//        }
-////        FileSystemResource resource = new FileSystemResource(filesService.getFilePathByName(fileNames));
-//
-//        assert resource != null;
-//        return ResponseEntity.ok()
-//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileNames)
-//                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-//                .contentLength(resource.getFile().length())
-//                .body(resource);
     }
 
     public List<String> searchNameFiles(HttpServletRequest request){
