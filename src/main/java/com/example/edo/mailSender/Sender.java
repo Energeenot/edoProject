@@ -59,7 +59,7 @@ public class Sender {
 
             uniqueCodePart.setText(uniqueCode);
             MimeBodyPart bodyPartText = new MimeBodyPart();
-            bodyPartText.setText("Зайдите в личный аккуунт перед проверкой");
+            bodyPartText.setText("Зайдите в личный аккаунт перед проверкой");
             Multipart multipart = new MimeMultipart();
             multipart.addBodyPart(mimeBodyPart);
             multipart.addBodyPart(bodyPartMessage);
