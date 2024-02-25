@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 @Controller
 @RequiredArgsConstructor
@@ -38,6 +39,9 @@ public class ValidatorAddController {
     @Autowired
     private FilesRepository filesRepository;
     Sender sender = new Sender();
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+
+
     @GetMapping("/validator-add")
     public String validatorAdd(Model model, Principal principal){
         model.addAttribute("user", userService.getUserByPrincipal(principal));
@@ -51,7 +55,7 @@ public class ValidatorAddController {
 
 
         if (files.isEmpty()) {
-            model.addAttribute("message", "Please select a file to upload");
+            model.addAttribute("message", "Пожалуйста выберите файлы для отправки");
             return "validator-add";
         }
         for (MultipartFile file : files){
@@ -81,7 +85,7 @@ public class ValidatorAddController {
             Path path = Paths.get(UPLOAD_FOLDER);
             Path filePath = path.resolve(uniqueFileName);
             Files.write(filePath, bytes);
-            model.addAttribute("message", "File uploaded successfully");
+            model.addAttribute("message", "Успешная отправка файлов");
 
 
                 // Создание папки пользователя (вместо UPLOAD_FOLDER может быть другой путь)
@@ -105,7 +109,7 @@ public class ValidatorAddController {
 
             } catch (IOException e) {
                 e.printStackTrace();
-                model.addAttribute("message", "Failed to upload file");
+                model.addAttribute("message", "Ошибка при отправке файлов");
             } catch (NoSuchAlgorithmException e) {
                 throw new RuntimeException(e);
             }
@@ -113,9 +117,15 @@ public class ValidatorAddController {
 
         //todo: выключить впн перед отправкой письма
         String teacherMail = request.getParameter("teacherMail");
-        if (teacherMail != null){
+        if (!EMAIL_PATTERN.matcher(teacherMail).matches()){
+            model.addAttribute("message", "Укажите почту преподавателя");
+            return "validator-add";
+        } else {
             sender.sendNotificationOfNewDocuments(uniqueID, teacherMail);
         }
+//        if (teacherMail != null){
+//            sender.sendNotificationOfNewDocuments(uniqueID, teacherMail);
+//        }
 
 //        groupNameCode = stringBuilder.toString();
 
