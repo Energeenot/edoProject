@@ -28,8 +28,8 @@ public class User implements UserDetails {
 //    @Size(min = 2, max = 45, message = "Минимальная длина фио 2 символа")
     @Column(name = "name")
     private String name;
-    @NotEmpty(message = "Поле эл. почта быть заполнено")
-//    @Email(message = "Введите корректный почтовый адрес")
+//    @NotEmpty(message = "Поле эл. почта быть заполнено")
+    @Email(message = "Введите корректный почтовый адрес")
     @Column(name = "mail", unique = true)
     private String mail;
     @NotEmpty(message = "Поле пароль должно быть заполнено")
