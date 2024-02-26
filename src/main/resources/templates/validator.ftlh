@@ -9,17 +9,50 @@
     <form action="/validator" method="post" id="validator">
         <span class="input__title">Введите код</span>
         <input type="text" id="kod" class="input_kod" name="uniqueGroupCode" placeholder="kod" autofocus="" aria-required="true" aria-invalid="true">
-        <div class="help-block"><p class="help-block help-block-error">Для получения документов необходимо ввести код.</p></div>
         <#if message??>
             <div style="color: red" class="invalid-feedback">
                 ${message}
             </div>
         </#if>
+        <div id="errorMessage" style="color: red; display: none;">Пожалуйста, введите код из письма</div>
+        <div class="help-block"><p class="help-block">Для получения документов необходимо ввести код.</p></div>
+<#--        <input type="hidden" id="isCodeInvalid" value="${isCodeInvalid}">-->
+
         <input type="hidden" name="_csrf" value="${_csrf.token}">
         <button type="submit" class="submit">Найти</button>
     </form>
 </div>
 </@template.template>
+
+<script>
+    document.getElementById("validator").addEventListener("submit", function(event) {
+        const kodInput = document.getElementById("kod");
+        const errorMessage = document.getElementById("errorMessage");
+        // var isCodeInvalid = document.getElementById("isCodeInvalid").value;
+
+        if (kodInput.value.trim() === "") {
+            // Показать сообщение об ошибке и предотвратить отправку формы
+            errorMessage.style.display = "block";
+            event.preventDefault();
+        } else {
+            // Скрыть сообщение об ошибке
+            errorMessage.style.display = "none";
+        }
+    });
+
+
+    // JavaScript для проверки значения скрытого поля и вывода сообщения
+    // document.getElementById("validator").addEventListener("submit", function (event) {
+    //     var isCodeInvalid = document.getElementById("isCodeInvalid").value;
+    //     if (isCodeInvalid === "true") {
+    //         alert("Введите корректный код!");
+    //         event.preventDefault(); // Предотвратить отправку формы
+    //     }
+    // });
+
+</script>
+
+
 
 
 
