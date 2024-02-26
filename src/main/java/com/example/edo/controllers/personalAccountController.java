@@ -29,7 +29,12 @@ public class personalAccountController {
             @RequestParam String name,
             @RequestParam String mail,
             @RequestParam String numberGroup,
-            Model model){
+            Model model, Principal principal){
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
+        if (numberGroup.isEmpty()){
+            model.addAttribute("message", "Введите данные");
+            return "personalAccount";
+        }
         User user = userRepository.findByMail(mail);
         model.addAttribute("user", user);
         user.setName(name);
