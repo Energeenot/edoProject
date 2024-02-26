@@ -1,36 +1,25 @@
 <head>
-<#--    <meta charset="UTF-8">-->
     <title>Личный кабинет</title>
-<#--    <link rel="stylesheet" type="text/css" href="/static/css/footer-page.css" th:href="@{/css/footer-page.css}"> <!--  &ndash;&gt;-->
-<#--    <link rel="stylesheet" type="text/css" href="/static/css/header-page.css" th:href="@{/css/header-page.css}">-->
-
 </head>
 <#import "blocks/template.ftlh" as template>
 <@template.template user>
     <h1> Личный кабинет</h1>
     <form action="/personalAccount" method="post">
         <div class="container-personalData">
-            <#--        <h2>${user.name}</h2>-->
-            <#--        <h2>${user.mail}</h2>-->
-            <#if user.name??>
-                ФИО пользователя: <input type="text" name="name" value="${user.name}"><br>
-                Эл. почта <input type="email" name="mail" value="${user.mail}"><br>
-            </#if>
-
-            <#--        если у пользователя есть номер группы, то отображаем следующие строки-->
-            <#if user.numberGroup??>
-                № группы <input type="text" name="numberGroup" value="${user.numberGroup}"><br>
-            <#else>
-                № группы <input type="text" name="numberGroup"><br>
+<#--            <#if user.name??>-->
+                ФИО пользователя: <input type="text" name="name" value="<#if user.name??>${user.name}</#if>"><br>
+                Эл. почта <input type="email" name="mail" value="<#if user.name??>${user.mail}</#if>"><br>
+                № группы <input type="text" name="numberGroup" value="<#if user.numberGroup??>${user.numberGroup}</#if>"><br>
+            <#if message??>
+                <div style="color: red" class="invalid-feedback">
+                    ${message}
+                </div>
             </#if>
 
             <input type="hidden" name="_csrf" value="${_csrf.token}">
             <input type="submit" value="Дополнить информацию">
         </div>
     </form>
-
-
-
 
     <form action="/logout" method="post">
         <input type="hidden" name="_csrf" value="${_csrf.token}">
