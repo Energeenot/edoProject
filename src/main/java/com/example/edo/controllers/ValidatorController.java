@@ -37,6 +37,7 @@ public class ValidatorController {
     private final UserService userService;
     private PostRepository postRepository;
     private final FilesService filesService;
+    private Boolean isSearchNameFilesIsEmpty = false;
 
 
     @GetMapping("/validator")
@@ -46,19 +47,26 @@ public class ValidatorController {
 //        Iterable<Post> posts = postRepository.findAll();
 //        model.addAttribute("posts", posts);
         model.addAttribute("user", userService.getUserByPrincipal(principal));
+        if (isSearchNameFilesIsEmpty){
+            model.addAttribute("message", "Нет совпадений, пожалуйста проверьте корректность кода");
+            isSearchNameFilesIsEmpty = false;
+        }
         return "validator";
     }
 
     @PostMapping("/validator")
-    public ResponseEntity<Resource> downloadFiles(HttpServletRequest request, Model model) {
+    public ResponseEntity<Resource> downloadFiles(HttpServletRequest request) {
         if (request.getParameter("uniqueGroupCode").isEmpty()){
-            HttpHeaders headers = new HttpHeaders();
-//            headers.add("errorMessage", "Enter the code from letter");
-            model.addAttribute("message", "Введите код из письма");
-            return ResponseEntity.status(HttpStatus.FOUND).headers(headers)
+            return ResponseEntity.status(HttpStatus.FOUND)
                     .location(URI.create("validator")).build();
 //            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+        if (searchNameFiles(request).isEmpty()){
+            isSearchNameFilesIsEmpty = true;
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .location(URI.create("validator")).build();
+        }
+//        наверное лучше следующий код запихнуть полностью под else
         List<String> fileNames = searchNameFiles(request);
         List<Resource> resources = new ArrayList<>();
 
