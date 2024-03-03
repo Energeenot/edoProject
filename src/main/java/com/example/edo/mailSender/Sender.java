@@ -23,11 +23,7 @@ public class Sender {
     }
 // отправка уведомления о новых файлах
     public void sendNotificationOfNewDocuments(String uniqueCode, String toEmail){
-        Session session = Session.getDefaultInstance(props, new Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(username, password);
-            }
-        });
+        Session session = getSession();
 
         try {
             Message message = new MimeMessage(session);
@@ -78,5 +74,48 @@ public class Sender {
 //        catch (MessagingException | IOException e) {
 //            throw new RuntimeException(e);
 //        }
+    }
+    public void sendNotificationOfResetPassword(String token, String toEmail){
+        Session session = getSession();
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(username));// от кого
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail)); // кому
+            message.setSubject("Попытка восстановить пароль");// тема сообщения
+            message.setText("Введите следующий код в специальном поле, чтобы восстановить пароль");// текст
+
+//            дата и время
+            Date date = new Date();
+            String str = String.format("Попытка восстановить пароль поступила в: %tc", date);
+
+            MimeBodyPart mimeBodyPart = new MimeBodyPart();
+            mimeBodyPart.setContent(str, "text/html; charset=utf-8");
+            MimeBodyPart bodyPartMessage = new MimeBodyPart();
+            bodyPartMessage.setText("Вернитесь на страницу восстановления пароля, и введите код в специальное поле.");
+            MimeBodyPart uniqueCodePart = new MimeBodyPart();
+
+            uniqueCodePart.setText(token);
+            MimeBodyPart bodyPartText = new MimeBodyPart();
+            bodyPartText.setText("http://localhost:8080/checkCode");
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(mimeBodyPart);
+            multipart.addBodyPart(bodyPartMessage);
+            multipart.addBodyPart(uniqueCodePart);
+            multipart.addBodyPart(bodyPartText);
+            message.setContent(multipart);
+            session.setDebug(true);
+
+            Transport.send(message);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Session getSession() {
+        return Session.getInstance(props, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, password);
+            }
+        });
     }
 }
