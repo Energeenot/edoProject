@@ -10,14 +10,8 @@
             <div style="color: red" class="invalid-feedback">
                 ${message}
             </div>
-<#--            <a href="/registration">Зарегистрироваться</a>-->
         </#if>
         <input type="hidden" name="_csrf" value="${_csrf.token}">
         <input type="submit" value="Восстановить пароль">
-        <#--        <#if checkCode??>-->
-        <#--            Введите код из письма<input name="resetPasswordCode"><br>-->
-        <#--            <input type="hidden" name="_csrf" value="${_csrf.token}">-->
-        <#--            <input type="submit" value="Проверить код">-->
-        <#--        </#if>-->
     </form>
 </@template.template>
