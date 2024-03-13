@@ -31,7 +31,12 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/personalAccount")
                         .permitAll()
                 )
-                .logout(LogoutConfigurer::permitAll);
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login") // Указываем URL для перенаправления после выхода из учетной записи
+                        .permitAll()
+                );
+//                .logout(LogoutConfigurer::permitAll);
         return http.build();
     }
 
