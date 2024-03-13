@@ -4,7 +4,8 @@
 <#import "blocks/template.ftlh" as template>
 <@template.template user>
     <form action="/login" method="post">
-        Эл. почта: <input type="email" name="username" value="<#if user.mail??>${user.mail}</#if>"><br>
+<#--        почта должна быть username-->
+        Эл. почта: <input name="username" value="<#if user.mail??>${user.mail}</#if>"><br>
         <#if mailError??>
             <div style="color: red" class="invalid-feedback">
                 ${mailError}
@@ -22,7 +23,8 @@
     <#if errorMessage??>
         <h2 style="color: red">${errorMessage}</h2>
     </#if>
-    <a href="/registration">Зарегистрироваться</a>
+    <a href="/registration">Зарегистрироваться</a><br>
+    <a href="/forgotPassword">Восстановить пароль</a>
 </@template.template>
 
 
