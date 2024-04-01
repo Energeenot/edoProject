@@ -1,10 +1,13 @@
 package com.example.edo.controllers;
 
 import com.example.edo.mailSender.Sender;
+import com.example.edo.models.Task;
 import com.example.edo.models.User;
 import com.example.edo.repositories.FilesRepository;
+import com.example.edo.repositories.TaskRepository;
 import com.example.edo.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +27,7 @@ import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @Controller
@@ -40,18 +40,25 @@ public class ValidatorAddController {
     private FilesRepository filesRepository;
     Sender sender = new Sender();
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    private final TaskRepository taskRepository;
 
 
     @GetMapping("/validator-add")
-    public String validatorAdd(Model model, Principal principal){
+    public String validatorAdd(Model model, Principal principal, @RequestParam("taskId") String strTaskId, HttpSession session){
         model.addAttribute("user", userService.getUserByPrincipal(principal));
+        session.setAttribute("taskId", strTaskId);
         return "validator-add";
     }
 
     @PostMapping("/validator-add")
-    public String uploadFile(@RequestParam("file") List<MultipartFile> files, Model model, Authentication authentication, HttpServletRequest request, Principal principal) {
+    public String uploadFile(@RequestParam("file") List<MultipartFile> files, Model model, Authentication authentication, HttpServletRequest request, Principal principal, HttpSession session) {
         model.addAttribute(userService.getUserByPrincipal(principal));
         String uniqueID = UUID.randomUUID().toString();
+
+        Long taskId = Long.parseLong((String) session.getAttribute("taskId"));
+        Optional<Task>  task = taskRepository.findTaskById(taskId);
+        Task desiredTask = null;
+
 
 
         if (files.isEmpty()) {
@@ -61,19 +68,9 @@ public class ValidatorAddController {
         for (MultipartFile file : files){
             try {
                 byte[] bytes = file.getBytes();
-//                Path path = Paths.get(UPLOAD_FOLDER + file.getOriginalFilename());
-//                Files.write(path, bytes);
-
-              /*
-               записывается файл в папку upload с уникальным именем,
-                либо создавать папки с именем пользователя и запихивать
-               туда все файлы с их именем, а в бд записывать и имя и уникальный код
-               */
 
             String originalFilename = file.getOriginalFilename();
             String extension = FilenameUtils.getExtension(originalFilename);
-//            String filenameWithoutExtension = FilenameUtils.removeExtension(originalFilename);
-
 
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
                 assert originalFilename != null;
@@ -86,7 +83,6 @@ public class ValidatorAddController {
             Path filePath = path.resolve(uniqueFileName);
             Files.write(filePath, bytes);
             model.addAttribute("message", "Успешная отправка файлов");
-
 
                 // Создание папки пользователя (вместо UPLOAD_FOLDER может быть другой путь)
 //                Path userDirectory = Paths.get(UPLOAD_FOLDER + "user_" + uniqueID);
@@ -101,7 +97,15 @@ public class ValidatorAddController {
                 User currentUser = (User) authentication.getPrincipal();
                 newFiles.setSender(currentUser);
                 filesRepository.save(newFiles);
-                
+                if (task.isPresent()){
+                    desiredTask = task.get();
+                    desiredTask.setFiles(newFiles);
+                    desiredTask.setStage("Документы отправлены");
+                    taskRepository.save(desiredTask);
+                }else {
+                    model.addAttribute("message", "Произошла ошибка, id задачи не привязался, попробуйте позже");
+                    return "validator-add";
+                }
             } else {
                 // Обработка ситуации, когда Authentication или Principal равны null
                 return "redirect:/login";
@@ -115,20 +119,19 @@ public class ValidatorAddController {
             }
         }
 
+//        String messageToTeacher = request.getParameter("messageToTeacher");
+        // через сессию передать преподу сообщение не получится, так как у него будет другая сессия, нужно скорее всего бд
+
         //todo: выключить впн перед отправкой письма
-        String teacherMail = request.getParameter("teacherMail");
+
+        assert desiredTask != null;
+        String teacherMail = desiredTask.getSender().getMail();
         if (!EMAIL_PATTERN.matcher(teacherMail).matches()){
             model.addAttribute("message", "Укажите почту преподавателя");
             return "validator-add";
         } else {
             sender.sendNotificationOfNewDocuments(uniqueID, teacherMail);
         }
-//        if (teacherMail != null){
-//            sender.sendNotificationOfNewDocuments(uniqueID, teacherMail);
-//        }
-
-//        groupNameCode = stringBuilder.toString();
-
         return "validator-add";
     }
     
