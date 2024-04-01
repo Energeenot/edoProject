@@ -24,19 +24,23 @@
                                     <span class="header-page_text">Главная</span>
                                 </a>
                             </li>
-                            <#if user.isStudent() || user.isTeacher()>
-                                <li class="header-page_li">
-                                    <a class="header-page_link" href="/validator">
-                                        <!-- data-scroll-to = "section-contacts" -->
-                                        <span class="header-page_text">Валидатор</span>
-                                    </a>
-                                </li>
+                            <#if user.isStudent()>
                                 <li class="header-page_li">
                                     <a class="header-page_link" href="/validator-add">
                                         <!--data-scroll-to = "section-about"> -->
                                         <span class="header-page_text">Новый документ</span>
                                     </a>
                                 </li>
+                            </#if>
+                            <#if user.isTeacher()>
+                                <li class="header-page_li">
+                                    <a class="header-page_link" href="/validator">
+                                        <!-- data-scroll-to = "section-contacts" -->
+                                        <span class="header-page_text">Валидатор</span>
+                                    </a>
+                                </li>
+                            </#if>
+                            <#if user.isStudent() || user.isTeacher()>
                                 <li class="header-page_li">
                                     <a class="header-page_link" href="/personalAccount">
                                         <span class="header-page_text">Личный кабинет</span>
@@ -86,6 +90,35 @@
         </div>
 
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var taskRows = document.querySelectorAll('.task-row');
+            taskRows.forEach(function(row) {
+                // Проверяем, была ли уже создана кнопка для данной строки
+                var buttonCreated = false;
+
+                row.addEventListener('click', function() {
+                    // Если кнопка ещё не создана, то создаём её и устанавливаем флаг
+                    if (!buttonCreated) {
+                        var taskId = this.getAttribute('data-task-id');
+                        var executeButton = document.createElement('button');
+                        executeButton.textContent = 'Выполнить задачу';
+                        executeButton.addEventListener('click', function() {
+                            window.location.href = '/validator-add?taskId=' + taskId;
+                        });
+
+                        // Вставляем кнопку после строки задачи
+                        this.insertAdjacentElement('afterend', executeButton);
+
+                        buttonCreated = true; // Устанавливаем флаг, что кнопка создана
+                    }
+                });
+
+                // Добавляем класс к строке, чтобы пометить её как обработанную
+                row.classList.add('task-row-processed');
+            });
+        });
+    </script>
     </body>
     </html>
 </#macro>
