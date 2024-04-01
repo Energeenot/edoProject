@@ -1,11 +1,9 @@
 package com.example.edo.controllers;
 
-import com.example.edo.repositories.PostRepository;
 import com.example.edo.services.FilesService;
 import com.example.edo.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,7 +32,6 @@ import java.util.zip.ZipOutputStream;
 public class ValidatorController {
 
     private final UserService userService;
-    private PostRepository postRepository;
     private final FilesService filesService;
     private Boolean isSearchNameFilesIsEmpty = false;
 
