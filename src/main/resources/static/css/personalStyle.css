@@ -1,0 +1,33 @@
+.custom-select {
+    position: relative;
+    display: inline-block;
+    width: 200px; /* Подстройте под свои требования */
+}
+
+#optionsList {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    border: 1px solid #ccc;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.option {
+    padding: 12px 16px;
+    cursor: pointer;
+}
+
+.option:hover {
+    background-color: #f1f1f1;
+}
+
+/*#selectedOption {*/
+/*    padding: 10px;*/
+/*    border: 1px solid #ccc;*/
+/*}*/
+
+.checkbox {
+    margin-right: 8px;
+}
