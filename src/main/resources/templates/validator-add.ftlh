@@ -9,12 +9,16 @@
 
         <form action="/validator-add" method="post" enctype="multipart/form-data">
             <input type="file" name="file" multiple />
-            Эл. почта преподавателя <input type="email" name="teacherMail"><br>
+<#--            Эл. почта преподавателя <input type="email" name="teacherMail"><br>-->
             <#if message??>
                 <div style="color: red" class="invalid-feedback" >
                     ${message}
                 </div>
             </#if>
+            <div class="info">Введите сообщение для преподователя, если это нужно</div>
+            <label>
+                <input type="text" name="messageToTeacher">
+            </label><br>
 
             <input type="hidden" name="_csrf" value="${_csrf.token}">
             <input type="submit" value="Upload File" />
