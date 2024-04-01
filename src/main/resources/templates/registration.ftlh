@@ -1,11 +1,15 @@
 <head>
     <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Andika:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <title>Регистрация</title>
 </head>
 <#import "blocks/template.ftlh" as template>
 <@template.template user>
     <form action="/registration" method="post">
-        ФИО пользователя: <input type="text" name="name" class="${(nameError??)?string('is-invalid', '')}" value="<#if user.name??>${user.name}</#if>"><br>
+        <label style="font-family: 'Andika', sans-serif;">ФИО пользователя:</label>
+        <input type="text" name="name" class="${(nameError??)?string('is-invalid', '')}" style="font-family: 'Andika', sans-serif;" value="<#if user.name??>${user.name}</#if>"><br>
         <#if nameError??>
             <div style="color: red" class = "invalid-feedback">
                 ${nameError}
@@ -14,7 +18,8 @@
 <#--        <#if bindingResult.hasFieldErrors("name")??>-->
 <#--            <span style="color: red">${bindingResult.getFieldError("name").defaultMessage}</span><br>-->
 <#--        </#if>-->
-        Эл. почта <input type="email" name="mail" value="<#if user.mail??>${user.mail}</#if>"><br>
+        <label style="font-family: 'Andika', sans-serif;">Эл. почта </label>
+        <input name="mail" value="<#if user.mail??>${user.mail}</#if>"><br>
         <#if mailError??>
             <div style="color: red" class="invalid-feedback">
                 ${mailError}
@@ -23,7 +28,8 @@
 <#--        <#if bindingResult.hasFieldErrors("mail")??>-->
 <#--            <span style="color: red">${bindingResult.getFieldError("mail").defaultMessage}</span><br>-->
 <#--        </#if>-->
-        Пароль: <input type="password" name="password"><br>
+        <label style="font-family: 'Andika', sans-serif;">Пароль: </label>
+         <input type="password" name="password"><br>
         <#if passwordError??>
             <div style="color: red" class="invalid-feedback">
                 ${passwordError}
@@ -33,7 +39,7 @@
 <#--            <span style="color: red">${bindingResult.getFieldError("password").defaultMessage}</span><br>-->
 <#--        </#if>-->
         <input type="hidden" name="_csrf" value="${_csrf.token}">
-        <input type="submit" value="Зарегистрироваться">
+        <input type="submit" value="Зарегистрироваться" style="font-family: 'Andika', sans-serif;">
     </form>
     <#if errorMessage??>
         <h2 style="color: red">${errorMessage}</h2>
