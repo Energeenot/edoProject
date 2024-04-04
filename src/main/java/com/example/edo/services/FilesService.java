@@ -23,6 +23,9 @@ public class FilesService {
     public List<String> findAllUniqueNamesByUniqueGroupCode(String uniqueGroupCode){
         return filesRepository.findAllUniqueNamesByUniqueGroupCode(uniqueGroupCode);
     }
+    public String findUniqueNameByUniqueGroupCode(String uniqueGroupCode){
+        return filesRepository.findUniqueNameByUniqueGroupCode(uniqueGroupCode);
+    }
 
     public Path getFilePathByName(String fileName) {
         return Paths.get(fileStoragePath, fileName);
