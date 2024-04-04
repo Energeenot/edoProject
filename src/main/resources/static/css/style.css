@@ -119,3 +119,12 @@
     }
 }
 
+.button-container {
+    display: flex;
+}
+
+.button-container button {
+    margin-right: 10px; /* Добавляем отступ между кнопками */
+}
+
+
