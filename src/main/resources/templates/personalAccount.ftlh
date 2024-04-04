@@ -30,41 +30,51 @@
     <div id="tasksContainer" style="display: none;">
             <a>Задачи</a><br>
             <#if user.isTeacher()>
-                <div id="showAllTasks">
-                    <table border="1">
-                        <thead>
-                        <tr>
-                            <th>id</th>
-                            <th>Сообщение</th>
-                            <th>Имя ученика</th>
-                            <th>Стадия выполнения</th>
-                            <th>Код для проверки документов</th>
-                            <th>Дедлайн</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <#list tasks as task>
+                <#if tasks??>
+                    <div id="showAllTasks">
+                        <table border="1">
+                            <thead>
                             <tr>
-                                <td>${task.id}</td>
-                                <td>${task.message}</td>
-                                <td>${task.user.name}</td>
-                                <td>${task.stage}</td>
-                                <td>
-                                    <#if task.files?exists && task.files.uniqueGroupCode?exists>
-                                        ${task.files.uniqueGroupCode}
-                                    <#else>
-                                        Не отправлен
-                                    </#if>
-                                </td>
-                                <td>${task.deadline}</td>
+                                <th>id</th>
+                                <th>Сообщение</th>
+                                <th>Имя ученика</th>
+                                <th>Стадия выполнения</th>
+                                <th>Код для проверки документов</th>
+                                <th>Дедлайн</th>
                             </tr>
-                        </#list>
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                            <#if numberGroups??>
+                                <#list tasks as task>
+                                    <tr class="teacher-task-row" data-task-id="${task.id?string}">
+                                        <td>${task.id}</td>
+                                        <td>${task.message}</td>
+                                        <td>${task.user.name}</td>
+                                        <td>${task.stage}</td>
+                                        <td>
+                                            <#if task.files?exists && task.files.uniqueGroupCode?exists>
+                                                ${task.files.uniqueGroupCode}
+                                            <#else>
+                                                Не отправлен
+                                            </#if>
+                                        </td>
+                                        <td>${task.deadline}</td>
+                                    </tr>
+                                </#list>
+                            </#if>
+
+                            </tbody>
+                        </table>
+                    </div>
+                <#else>
+                    <a>Нет созданных задач</a>
+                </#if>
                 <div id="createTaskForm" style="display: none;">
                     <form action="/personalAccount/createTask" method="post">
 <#--                        <input type="hidden" name="_csrf" value="${_csrf.token}">-->
+                        <div class="info">
+                            <label>Для того чтобы создать задачу, введите сообщение, выберите группы для которых будет создана задача, выберите дедлайн, и сохраните задачу.</label>
+                        </div>
                         <div>
                             <label for="message">Сообщение:</label>
                             <input type="text" id="message" name="message">
@@ -72,14 +82,16 @@
                         <div class="custom-select" onclick="toggleOptions()">
                             <span id="selectedOption">Выберите группы: </span><br>
                             <div id="optionsList" class="options-list">
-                                <#list numberGroups as group>
-                                    <div class="option" onclick="toggleSelection(event)">
-                                        <input type="checkbox" class="checkbox" value="${group}" id="${group}">
-                                        <label for="${group}">${group}</label>
-                                    </div>
-                                </#list>
+                                <#if numberGroups??>
+                                    <#list numberGroups as group>
+                                        <div class="option" onclick="toggleSelection(event)">
+                                            <input type="checkbox" class="checkbox" value="${group}" id="${group}">
+                                            <label for="${group}">${group}</label>
+                                        </div>
+                                    </#list>
+                                </#if>
                             </div>
-                            <input  id="selectedGroupsInput" name="selectedGroups">
+                            <input style="display: none" id="selectedGroupsInput" name="selectedGroups">
                         </div>
                         <div>
                             <label for="deadline">Дедлайн:</label>
@@ -129,10 +141,6 @@
                             </tbody>
                         </table>
                     </div>
-<#--                    <form action="/validator-add" method="get">-->
-<#--                        <input type="hidden" name="_csrf" value="${_csrf.token}">-->
-<#--                        <input type="submit" value="Выполнить задачу">-->
-<#--                    </form>-->
                 <#else>
                     <a>Нет задач</a>
                 </#if>
