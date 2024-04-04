@@ -118,6 +118,106 @@
                 row.classList.add('task-row-processed');
             });
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var taskRows = document.querySelectorAll('.teacher-task-row');
+            taskRows.forEach(function(row) {
+                // Проверяем, была ли уже создана кнопка для данной строки
+                var buttonCreated = false;
+
+                row.addEventListener('click', function() {
+                    // Если кнопка ещё не создана, то создаём её и устанавливаем флаг
+                    if (!buttonCreated) {
+                        var taskId = this.getAttribute('data-task-id');
+                        var buttonContainer = document.createElement('div');
+                        buttonContainer.classList.add('button-container');
+
+                        var executeForm = document.createElement('form');
+                        executeForm.id = 'executeForm';
+                        executeForm.action = '/personalAccount/execute';
+                        executeForm.method = 'post';
+                        var csrfInput = document.createElement('input');
+                        csrfInput.type = 'hidden';
+                        csrfInput.name = '_csrf';
+                        csrfInput.value = '${_csrf.token}';
+                        var executeButton = document.createElement('button');
+                        executeButton.textContent = 'Отметить выполненной';
+                        executeForm.appendChild(csrfInput);
+                        executeForm.appendChild(executeButton);
+                        buttonContainer.appendChild(executeForm);
+
+                        var taskIdField = document.createElement('input');
+                        taskIdField.type = 'hidden';
+                        taskIdField.name = 'executeTaskId';
+                        taskIdField.value = taskId;
+                        executeForm.appendChild(taskIdField);
+
+
+                        var deleteForm = document.createElement('form');
+                        deleteForm.id = 'deleteForm';
+                        deleteForm.action = '/personalAccount/delete';
+                        deleteForm.method = 'post';
+                        var csrfInputDelete = document.createElement('input');
+                        csrfInputDelete.type = 'hidden';
+                        csrfInputDelete.name = '_csrf';
+                        csrfInputDelete.value = '${_csrf.token}';
+                        var deleteButton = document.createElement('button');
+                        deleteButton.textContent = 'Удалить задачу';
+                        deleteForm.appendChild(csrfInputDelete);
+                        deleteForm.appendChild(deleteButton);
+                        buttonContainer.appendChild(deleteForm);
+
+                        var taskIdFieldDelete = document.createElement('input');
+                        taskIdFieldDelete.type = 'hidden';
+                        taskIdFieldDelete.name = 'deleteTaskId';
+                        taskIdFieldDelete.value = taskId;
+                        deleteForm.appendChild(taskIdFieldDelete);
+
+                        this.insertAdjacentElement('afterend', buttonContainer);
+                        buttonCreated = true; // Устанавливаем флаг, что кнопка создана
+                    }
+                });
+
+                // Добавляем класс к строке, чтобы пометить её как обработанную
+                row.classList.add('task-row-processed');
+            });
+        });
+
+
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     var taskRows = document.querySelectorAll('.teacher-task-row');
+        //     taskRows.forEach(function(row) {
+        //         // Проверяем, была ли уже создана кнопка для данной строки
+        //         var buttonCreated = false;
+        //
+        //         row.addEventListener('click', function() {
+        //             // Если кнопка ещё не создана, то создаём её и устанавливаем флаг
+        //             if (!buttonCreated) {
+        //                 var taskId = this.getAttribute('data-task-id');
+        //                 var buttonContainer = document.createElement('div');
+        //                 buttonContainer.classList.add('button-container');
+        //                 var executeButton = document.createElement('button');
+        //                 executeButton.textContent = 'Отметить выполненной';
+        //                 // executeButton.addEventListener('click', function() {
+        //                 //     window.location.href = '/personalAccount?taskId=' + taskId;
+        //                 // });
+        //                 var deleteButton = document.createElement('button');
+        //                 deleteButton.textContent = 'Удалить задачу';
+        //
+        //                 // Вставляем кнопку после строки задачи
+        //                 // this.insertAdjacentElement('afterend', executeButton);
+        //                 // this.insertAdjacentElement('afterend', deleteButton);
+        //                 buttonContainer.appendChild(executeButton);
+        //                 buttonContainer.appendChild(deleteButton);
+        //                 this.insertAdjacentElement('afterend', buttonContainer);
+        //                 buttonCreated = true; // Устанавливаем флаг, что кнопка создана
+        //             }
+        //         });
+        //
+        //         // Добавляем класс к строке, чтобы пометить её как обработанную
+        //         row.classList.add('task-row-processed');
+        //     });
+        // });
     </script>
     </body>
     </html>
