@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -109,6 +110,33 @@ public class personalAccountController {
         }
 
         return "personalAccount";
+    }
+
+    @PostMapping("/personalAccount/execute")
+    public String executeTask(@RequestParam String executeTaskId, Model model, Principal principal){
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
+        Optional<Task> currentTask = taskRepository.findTaskById(Long.parseLong((String)executeTaskId));
+        Task desiredTask;
+        if (currentTask.isPresent()){
+            desiredTask = currentTask.get();
+            desiredTask.setStage("Задача выполнена");
+            taskRepository.save(desiredTask);
+        }
+//        desiredTask = curentTask.get();
+
+        return "redirect:/personalAccount";
+    }
+
+    @PostMapping("/personalAccount/delete")
+    public String deleteTask(Model model, Principal principal, @RequestParam String deleteTaskId){
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
+        Optional<Task> currentTask = taskRepository.findTaskById(Long.parseLong((String)deleteTaskId));
+        Task desiredTask;
+        if (currentTask.isPresent()){
+            desiredTask = currentTask.get();
+            taskRepository.deleteById(desiredTask.getId());
+        }
+        return "redirect:/personalAccount";
     }
 }
 //http://localhost:8080/personalAccount?qwe=имя
