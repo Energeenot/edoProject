@@ -1,10 +1,12 @@
 <head>
+    <link rel="stylesheet" type="text/css" href="/static/css/resetPasswordStyle.css">
     <meta charset="UTF-8">
     <title>Восстановление пароля</title>
 </head>
 <#import "blocks/template.ftlh" as template>
 <@template.template user>
     <form action="/resetPassword" method="post">
+        <div>Введите новый парроль</div>
         Пароль: <input type="password" name="password"><br>
 <#--        <#if passwordError??>-->
 <#--            <div style="color: red" class="invalid-feedback">-->
