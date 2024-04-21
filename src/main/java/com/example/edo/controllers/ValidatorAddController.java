@@ -100,13 +100,15 @@ public class ValidatorAddController {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
-
+        String messageToTeacher = request.getParameter("messageToTeacher");
         String teacherMail = desiredTask.getSender().getMail();
+        String fio = desiredTask.getUser().getName();
+        String numberGroup = desiredTask.getUser().getNumberGroup();
         if (!EMAIL_PATTERN.matcher(teacherMail).matches()){
-            model.addAttribute("message", "Укажите почту преподавателя");
+            model.addAttribute("message", "Почта преподавателя не указана");
             return "validator-add";
         } else {
-            sender.sendNotificationOfNewDocuments(uniqueID, teacherMail);
+            sender.sendNotificationOfNewDocuments(uniqueID, teacherMail, fio, numberGroup, messageToTeacher);
         }
 
 
