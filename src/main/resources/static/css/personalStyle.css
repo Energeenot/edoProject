@@ -1,33 +1,267 @@
+body {
+    background-color: #1f1f1f;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    color: #fff;
+    text-align: center;
+    margin-top: 20px;
+}
+
+button {
+    background-color: #333;
+    color: #fff;
+    border: 2px solid orange;
+    padding: 10px 20px;
+    margin: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #555;
+}
+.container-personalInfo{
+    margin-left: 250px; /* Отступ справа для основного содержания */
+    padding: 10px;
+}
+.container-personalData input[type="text"],
+.container-personalData input[type="email"] {
+    /*margin-left: 250px; !* Отступ справа для основного содержания *!*/
+    /*padding: 20px;*/
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #555;
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 5px;
+}
+
+.container-personalData input[type="submit"] {
+    background-color: #333;
+    color: #fff;
+    border: 2px solid orange;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.container-personalData input[type="submit"]:hover {
+    background-color: #555;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #555;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #333;
+    color: orange;
+}
+
+tr:nth-child(even) {
+    background-color: #333;
+}
+
+.info {
+    color: orange; /* Цвет текста */
+    margin-bottom: 10px; /* Отступ снизу */
+    margin-top: 20px; /* Отступ сверху */
+}
+
 .custom-select {
     position: relative;
     display: inline-block;
-    width: 200px; /* Подстройте под свои требования */
+    margin-bottom: 10px;
 }
 
-#optionsList {
+.custom-select select {
+    display: none;
+}
+
+.options-list {
     display: none;
     position: absolute;
-    background-color: #f9f9f9;
+    background-color: #333;
     min-width: 160px;
-    border: 1px solid #ccc;
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    border: 1px solid orange;
     z-index: 1;
 }
 
-.option {
+.options-list .option {
     padding: 12px 16px;
+    color: #fff;
     cursor: pointer;
 }
 
-.option:hover {
-    background-color: #f1f1f1;
+.options-list .option:hover {
+    background-color: orange;
+    color: #333;
 }
 
-/*#selectedOption {*/
+#selectedOption {
+    color: #fff; /* Цвет текста */
+    text-decoration: underline; /* Подчеркивание текста */
+    cursor: pointer; /* Изменение курсора при наведении */
+}
+
+#selectedOption:hover {
+    color: #ff7f00; /* Изменение цвета текста при наведении */
+}
+
+#selectedGroupsInput {
+    display: none;
+}
+#createTaskForm label {
+    color: #fff;
+}
+
+.save-button {
+    /*position: relative;*/
+    /*margin-left: 260px; !* Отступ справа для основного содержания *!*/
+    padding: 10px;
+    background-color: #333;
+    color: #fff;
+    border: 2px solid orange;
+    /*padding: 10px 20px;*/
+    /*margin: 10px;*/
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+/*input[type="submit"] {*/
+/*    margin-left: 260px; !* Отступ справа для основного содержания *!*/
 /*    padding: 10px;*/
-/*    border: 1px solid #ccc;*/
+/*    background-color: #333;*/
+/*    color: #fff;*/
+/*    border: 2px solid orange;*/
+/*    !*padding: 10px 20px;*!*/
+/*    !*margin: 10px;*!*/
+/*    cursor: pointer;*/
+/*    border-radius: 5px;*/
+/*    transition: background-color 0.3s ease;*/
 /*}*/
 
-.checkbox {
-    margin-right: 8px;
+.exit-button{
+    margin-left: 260px; /* Отступ справа для основного содержания */
+    padding: 10px;
+    background-color: #333;
+    color: #fff;
+    border: 2px solid orange;
+    /*padding: 10px 20px;*/
+    /*margin: 10px;*/
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+input[type="submit"]:hover {
+    background-color: #555;
+}
+
+/*.sidebar {*/
+/*    position: absolute;*/
+/*    !*top: 50px; !* Отступ сверху для бокового меню *!*!*/
+/*    left: 0;*/
+/*    width: 200px;*/
+/*    height: calc(100%); !* Высота боковой панели минус отступ сверху *!*/
+/*    background-color: #333;*/
+/*    padding: 20px;*/
+
+/*}*/
+/*.sidebar button{*/
+/*    top: 150px;*/
+/*}*/
+
+.sidebar {
+    position: absolute;
+    top: 150px; /* Отступ сверху для бокового меню */
+    left: 0;
+    width: 180px;
+    background-color: #333;
+    padding: 20px;
+}
+
+/*.sidebar::after {*/
+/*    content: "";*/
+/*    display: block;*/
+/*    position: fixed;*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*    width: 200px;*/
+/*    height: 100%;*/
+/*    background-color: #333; !* Цвет фона *!*/
+/*    opacity: 0.8; !* Прозрачность *!*/
+/*    z-index: -1; !* Помещаем фон под содержимое *!*/
+/*}*/
+
+.sidebar button {
+    width: 100%;
+    /*padding: 10px;*/
+    margin-bottom: 10px;
+    background-color: transparent;
+    color: #fff;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.sidebar button:hover {
+    background-color: #555;
+}
+
+#userInfoBtn, #tasksBtn {
+    /*display: block;*/
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 5px;
+    background-color: transparent;
+    color: #fff;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#userInfoBtn:hover, #tasksBtn:hover {
+    background-color: #555;
+}
+#userInfoContainer input[type="submit"] {
+    margin-left: 0; /* Убираем отступ справа только у этой кнопки */
+}
+
+.tasksContainer{
+    margin-left: 260px
+}
+.tasksContainer button{
+    margin-left: 0;
+}
+
+input[name="feedbackInput"] {
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #555;
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 5px;
 }
