@@ -1,8 +1,10 @@
 <head>
+    <link rel="stylesheet" type="text/css" href="/static/css/loginStyle.css">
     <title>Авторизация</title>
 </head>
 <#import "blocks/template.ftlh" as template>
 <@template.template user>
+    <h1>Авторизация</h1>
     <form action="/login" method="post">
 <#--        почта должна быть username-->
         Эл. почта: <input name="username" value="<#if user.mail??>${user.mail}</#if>"><br>
