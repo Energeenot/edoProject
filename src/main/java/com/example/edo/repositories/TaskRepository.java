@@ -19,4 +19,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     Optional<Task> findTaskById(Long taskId);
 
     void deleteById(Long id);
+
+    @Query("SELECT t FROM Task t WHERE t.files.uniqueGroupCode = :uniqueGroupCode")
+    Optional<Task> findByUniqueGroupCode(@Param("uniqueGroupCode") String uniqueGroupCode);
 }
