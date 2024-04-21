@@ -1,0 +1,57 @@
+body {
+    background-color: #1f1f1f;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.section-about {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #333;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.banner__title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.banner_span {
+    color: orange;
+}
+
+.banner__descr {
+    color: #fff;
+    line-height: 1.5;
+}
+
+.instruction {
+    max-width: 600px;
+    margin: 50px auto;
+}
+
+.info_list-block {
+    background-color: #333;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.info_subtitle {
+    color: orange;
+    margin-bottom: 10px;
+}
+
+.marker {
+    list-style-type: none;
+    padding-left: 20px;
+}
+
+.marker li {
+    color: #fff;
+    margin-bottom: 10px;
+}

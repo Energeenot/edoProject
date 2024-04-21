@@ -1,4 +1,5 @@
 <head>
+    <link rel="stylesheet" type="text/css" href="/static/css/homeStyle.css">
 <!--    <meta name="keywords" content="эдо, электронный документооборот, пэп, электронная подпись, смс подпись, sms подпись, мобильная подпись">-->
 
     <title>НАЗВАНИЕ – простая электронная подпись по почте</title>
