@@ -5,14 +5,18 @@
 <#import "blocks/template.ftlh" as template>
 <@template.template user>
     <h1> Личный кабинет</h1>
-    <button id="userInfoBtn">Информация о пользователе</button><br>
-    <button id="tasksBtn">Задачи</button>
+    <div class="sidebar">
+        <button id="userInfoBtn">Информация о пользователе</button><br>
+        <button id="tasksBtn">Задачи</button>
+    </div>
 
-    <div id="userInfoContainer">
+    <div id="userInfoContainer" class="container-personalInfo">
         <form action="/personalAccount/supplementInformation" method="post">
             <div class="container-personalData">
                 <#--            <#if user.name??>-->
-                ФИО пользователя: <input type="text" name="name" value="<#if user.name??>${user.name}</#if>"><br>
+                 <label>ФИО пользователя:
+                    <input type="text" name="name" value="<#if user.name??>${user.name}</#if>">
+                </label><br>
                 Эл. почта <input type="email" name="mail" value="<#if user.name??>${user.mail}</#if>"><br>
                 № группы <input type="text" name="numberGroup" value="<#if user.numberGroup??>${user.numberGroup}</#if>"><br>
                 <#if message??>
@@ -27,7 +31,7 @@
         </form>
     </div>
 
-    <div id="tasksContainer" style="display: none;">
+    <div id="tasksContainer" class="tasksContainer" style="display: none;">
             <a>Задачи</a><br>
             <#if user.isTeacher()>
                 <#if tasks??>
@@ -98,7 +102,7 @@
                             <input type="date" id="deadline" name="deadline">
                         </div>
                         <input type="hidden" name="_csrf" value="${_csrf.token}">
-                        <input type="submit" value="Сохранить задачу">
+                        <input type="submit" class="save-button" value="Сохранить задачу">
                     </form>
                 </div>
                 <button id="createTask">Создать задачу</button>
@@ -151,7 +155,7 @@
 
     <form action="/logout" method="post">
         <input type="hidden" name="_csrf" value="${_csrf.token}">
-        <input type="submit" value="Выйти">
+        <input type="submit" class="exit-button" value="Выйти">
     </form>
 </@template.template>
 <script>
