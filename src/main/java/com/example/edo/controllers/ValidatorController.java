@@ -1,5 +1,7 @@
 package com.example.edo.controllers;
 
+import com.example.edo.models.Task;
+import com.example.edo.repositories.TaskRepository;
 import com.example.edo.services.FilesService;
 import com.example.edo.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,6 +24,7 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.Principal;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -29,6 +32,7 @@ public class ValidatorController {
 
     private final UserService userService;
     private final FilesService filesService;
+    private final TaskRepository taskRepository;
     private Boolean isSearchNameFilesIsEmpty = false;
 
 
@@ -59,6 +63,13 @@ public class ValidatorController {
         }
 
         try {
+            Optional<Task> currentTask = taskRepository.findByUniqueGroupCode(request.getParameter("uniqueGroupCode"));
+            Task desiredTask;
+            if (currentTask.isPresent()){
+                desiredTask = currentTask.get();
+                desiredTask.setStage("Документы на проверке");
+                taskRepository.save(desiredTask);
+            }
             String fileName = searchNameFiles(request);
 
             // Путь к существующему архиву
