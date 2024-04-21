@@ -3,10 +3,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Andika:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/static/css/registrationStyle.css">
     <title>Регистрация</title>
 </head>
 <#import "blocks/template.ftlh" as template>
 <@template.template user>
+    <h1>Регистрация</h1>
     <form action="/registration" method="post">
         <label style="font-family: 'Andika', sans-serif;">ФИО пользователя:</label>
         <input type="text" name="name" class="${(nameError??)?string('is-invalid', '')}" style="font-family: 'Andika', sans-serif;" value="<#if user.name??>${user.name}</#if>"><br>
