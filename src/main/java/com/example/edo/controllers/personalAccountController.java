@@ -1,5 +1,6 @@
 package com.example.edo.controllers;
 
+import com.example.edo.mailSender.Sender;
 import com.example.edo.models.Task;
 import com.example.edo.models.User;
 import com.example.edo.repositories.TaskRepository;
@@ -135,6 +136,23 @@ public class personalAccountController {
         if (currentTask.isPresent()){
             desiredTask = currentTask.get();
             taskRepository.deleteById(desiredTask.getId());
+        }
+        return "redirect:/personalAccount";
+    }
+
+    @PostMapping("/personalAccount/feedback")
+    public String feedbackToStudent(Model model, Principal principal, @RequestParam String feedbackTaskId, @RequestParam String feedbackInput){
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
+        Optional<Task> currentTask = taskRepository.findTaskById(Long.parseLong((String) feedbackTaskId));
+        Task desiredTask;
+        if (currentTask.isPresent()){
+            desiredTask = currentTask.get();
+            desiredTask.setStage("Отправлены правки");
+            taskRepository.save(desiredTask);
+            String studentMail = desiredTask.getUser().getMail();
+            String teacherName = desiredTask.getSender().getName();
+            Sender sender = new Sender();
+            sender.sendFeedbackToStudent(studentMail, teacherName, feedbackInput);
         }
         return "redirect:/personalAccount";
     }
