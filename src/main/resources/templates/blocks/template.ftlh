@@ -24,14 +24,14 @@
                                     <span class="header-page_text">Главная</span>
                                 </a>
                             </li>
-                            <#if user.isStudent()>
-                                <li class="header-page_li">
-                                    <a class="header-page_link" href="/validator-add">
-                                        <!--data-scroll-to = "section-about"> -->
-                                        <span class="header-page_text">Новый документ</span>
-                                    </a>
-                                </li>
-                            </#if>
+<#--                            <#if user.isStudent()>-->
+<#--                                <li class="header-page_li">-->
+<#--                                    <a class="header-page_link" href="/validator-add">-->
+<#--                                        <!--data-scroll-to = "section-about"> &ndash;&gt;-->
+<#--                                        <span class="header-page_text">Новый документ</span>-->
+<#--                                    </a>-->
+<#--                                </li>-->
+<#--                            </#if>-->
                             <#if user.isTeacher()>
                                 <li class="header-page_li">
                                     <a class="header-page_link" href="/validator">
@@ -136,10 +136,12 @@
                         executeForm.id = 'executeForm';
                         executeForm.action = '/personalAccount/execute';
                         executeForm.method = 'post';
+
                         var csrfInput = document.createElement('input');
                         csrfInput.type = 'hidden';
                         csrfInput.name = '_csrf';
                         csrfInput.value = '${_csrf.token}';
+
                         var executeButton = document.createElement('button');
                         executeButton.textContent = 'Отметить выполненной';
                         executeForm.appendChild(csrfInput);
@@ -157,15 +159,44 @@
                         deleteForm.id = 'deleteForm';
                         deleteForm.action = '/personalAccount/delete';
                         deleteForm.method = 'post';
+
                         var csrfInputDelete = document.createElement('input');
                         csrfInputDelete.type = 'hidden';
                         csrfInputDelete.name = '_csrf';
                         csrfInputDelete.value = '${_csrf.token}';
+
                         var deleteButton = document.createElement('button');
                         deleteButton.textContent = 'Удалить задачу';
                         deleteForm.appendChild(csrfInputDelete);
                         deleteForm.appendChild(deleteButton);
                         buttonContainer.appendChild(deleteForm);
+
+                        var feedbackForm = document.createElement('form');
+                        feedbackForm.id = 'feedbackForm';
+                        feedbackForm.action = '/personalAccount/feedback';
+                        feedbackForm.method = 'post';
+
+                        var feedbackInput = document.createElement('input');
+                        feedbackInput.name = 'feedbackInput';
+
+                        var feedbackButton = document.createElement('button');
+                        feedbackButton.textContent = 'Отправить отзыв о документах';
+
+                        var taskIdFeedback = document.createElement('input');
+                        taskIdFeedback.type = 'hidden';
+                        taskIdFeedback.name = 'feedbackTaskId';
+                        taskIdFeedback.value = taskId;
+
+                        var csrfFeedback = document.createElement('input');
+                        csrfFeedback.type = 'hidden';
+                        csrfFeedback.name = '_csrf';
+                        csrfFeedback.value = '${_csrf.token}';
+
+                        feedbackForm.appendChild(csrfFeedback);
+                        feedbackForm.appendChild(taskIdFeedback);
+                        feedbackForm.appendChild(feedbackInput);
+                        feedbackForm.appendChild(feedbackButton);
+                        buttonContainer.appendChild(feedbackForm);
 
                         var taskIdFieldDelete = document.createElement('input');
                         taskIdFieldDelete.type = 'hidden';
