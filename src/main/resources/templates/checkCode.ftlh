@@ -1,4 +1,5 @@
 <head>
+    <link rel="stylesheet" type="text/css" href="/static/css/checkCodeStyle.css">
     <title>Восстановление пароля</title>
 </head>
 <#import "blocks/template.ftlh" as template>
