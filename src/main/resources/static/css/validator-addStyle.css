@@ -1,0 +1,67 @@
+/* validator-addStyle.css */
+
+body {
+    background-color: #1f1f1f;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    color: #fff;
+    text-align: center;
+    margin-top: 20px;
+}
+
+button {
+    background-color: #333;
+    color: #fff;
+    border: 2px solid orange;
+    padding: 10px 20px;
+    margin: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #555;
+}
+
+.add-document-container {
+    margin-left: 250px; /* Отступ справа для основного содержания */
+    padding: 10px;
+}
+
+.add-document-container input[type="text"],
+.add-document-container input[type="email"] {
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #555;
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 5px;
+}
+
+.add-document-container input[type="submit"] {
+    background-color: #333;
+    color: #fff;
+    border: 2px solid orange;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.add-document-container input[type="submit"]:hover {
+    background-color: #555;
+}
+
+.info {
+    color: orange;
+    margin-bottom: 10px;
+    margin-top: 20px;
+}

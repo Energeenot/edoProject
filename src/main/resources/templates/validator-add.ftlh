@@ -1,10 +1,11 @@
 <head>
+    <link rel="stylesheet" type="text/css" href="/static/css/validator-addStyle.css">
     <title>Добавление документа</title>
 </head>
 <body>
 <#import "blocks/template.ftlh" as template>
 <@template.template user>
-    <div class="container">
+    <div class="add-document-container">
         <h1>Добавление документов</h1>
 
         <form action="/validator-add" method="post" enctype="multipart/form-data">
