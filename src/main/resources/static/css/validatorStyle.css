@@ -1,0 +1,63 @@
+body {
+    background-color: #1f1f1f;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container-validator {
+    margin: 20px auto;
+    max-width: 600px;
+    padding: 20px;
+    background-color: #333;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.container-validator h1 {
+    color: #fff;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.input__title {
+    color: #fff;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.input_kod {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: #555;
+    color: #fff;
+    border: 1px solid orange;
+    border-radius: 4px;
+}
+
+.invalid-feedback {
+    margin-bottom: 10px;
+    color: red;
+}
+
+.help-block {
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+.submit {
+    width: 100%;
+    padding: 10px;
+    background-color: #333;
+    color: #fff;
+    border: 2px solid orange;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit:hover {
+    background-color: #555;
+}

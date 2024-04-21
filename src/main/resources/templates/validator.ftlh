@@ -1,5 +1,6 @@
 <head>
     <title>Валидатор</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/validatorStyle.css">
 <#--    <link rel="stylesheet" type="text/css" href="/static/css/validator.css" th:href="@{/css/validator.css}">-->
 </head>
 <#import "blocks/template.ftlh" as template>
