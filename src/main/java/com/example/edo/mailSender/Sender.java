@@ -8,8 +8,8 @@ import java.util.Date;
 import java.util.Properties;
 
 public class Sender {
-    private final String username = "edopoject@mail.ru";
-    private final String password = "ctsjtWNvLTrxhifKCYq9";
+    private final String username = "";
+    private final String password = "";
     private final Properties props;
 
     public Sender() {
@@ -30,9 +30,7 @@ public class Sender {
             message.setFrom(new InternetAddress(username));// от кого
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail)); // кому
             message.setSubject("Поступили документы на проверку");// тема сообщения
-//            message.setText("Ученик " + fio + " из " + numberGroup + " группы сдал документы на проверку, введите код ниже на странице 'Валидатор' для проверки документов.");// текст
 
-//            дата и время
             Date date = new Date();
             String str = String.format("Время поступления документов: %tc", date);
 
@@ -41,17 +39,6 @@ public class Sender {
             MimeBodyPart bodyPartMessage = new MimeBodyPart();
             bodyPartMessage.setText("Ученик" + fio + "из " + numberGroup + " группы сдал документы на проверку, введите код ниже на странице 'Валидатор' для проверки документов.");
             MimeBodyPart uniqueCodePart = new MimeBodyPart();
-
-
-//            bodyPart.setContent("Средняя температура 9 градусов цельсия, весь день облачно.", "text/html; charset=utf-8");
-//            MimeBodyPart attachmentBodyPart = new MimeBodyPart();
-
-//            attachmentBodyPart.attachFile(new File("C:\\Users\\abram\\IdeaProjects\\sendingLetter\\src\\main\\java\\kot_i_komp.jpg"));
-//            MimeBodyPart attachmentJavaPart = new MimeBodyPart();
-//            attachmentJavaPart.attachFile(new File("C:\\Users\\abram\\IdeaProjects\\sendingLetter\\src\\main\\java\\Main.java"));
-//            MimeBodyPart attachmentJava1Part = new MimeBodyPart();
-//            attachmentJava1Part.attachFile(new File("C:\\Users\\abram\\IdeaProjects\\sendingLetter\\src\\main\\java\\Sender.java"));
-
             uniqueCodePart.setText(uniqueCode);
             MimeBodyPart messagePart = new MimeBodyPart();
             messagePart.setText("Сообщение от ученика: " + messageToTeacher);
@@ -63,9 +50,6 @@ public class Sender {
             multipart.addBodyPart(uniqueCodePart);
             multipart.addBodyPart(messagePart);
             multipart.addBodyPart(bodyPartText);
-//            multipart.addBodyPart(attachmentBodyPart);
-//            multipart.addBodyPart(attachmentJavaPart);
-//            multipart.addBodyPart(attachmentJava1Part);
             message.setContent(multipart);
             session.setDebug(true);
 
@@ -73,9 +57,6 @@ public class Sender {
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
-//        catch (MessagingException | IOException e) {
-//            throw new RuntimeException(e);
-//        }
     }
     public void sendNotificationOfResetPassword(String token, String toEmail){
         Session session = getSession();
@@ -84,9 +65,7 @@ public class Sender {
             message.setFrom(new InternetAddress(username));// от кого
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail)); // кому
             message.setSubject("Попытка восстановить пароль");// тема сообщения
-//            message.setText("Введите следующий код в специальном поле, чтобы восстановить пароль");// текст
 
-//            дата и время
             Date date = new Date();
             String str = String.format("Попытка восстановить пароль поступила в: %tc", date);
 
@@ -123,9 +102,7 @@ public class Sender {
             message.setFrom(new InternetAddress(username));// от кого
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail)); // кому
             message.setSubject("Сообщение от преподавателя о документах");// тема сообщения
-//            message.setText("Преподаватель " + teacherName + " отправил вам сообщение: " + feedback);// текст
 
-//            дата и время
             Date date = new Date();
             String str = String.format("Сообщение отправили в: %tc", date);
 
