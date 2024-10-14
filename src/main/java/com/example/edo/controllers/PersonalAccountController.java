@@ -6,8 +6,6 @@ import com.example.edo.models.User;
 import com.example.edo.repositories.TaskRepository;
 import com.example.edo.repositories.UserRepository;
 import com.example.edo.services.UserService;
-import jakarta.mail.Session;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -15,14 +13,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-public class personalAccountController {
+public class PersonalAccountController {
     private final UserService userService;
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
@@ -37,28 +34,10 @@ public class personalAccountController {
                 model.addAttribute("numberGroups", numberGroups);
             }
             List<Task> allTasks = taskRepository.findAll();
-//            List<String> numberGroupsList = new ArrayList<>();
             if (!allTasks.isEmpty()){
                 model.addAttribute("tasks", allTasks);
-//                for (Task task: allTasks){
-////                     numberGroupsList.add(task.getUser().getNumberGroup());
-//                    System.out.println(task);
-//                    model.addAttribute("taskMessage", task.getMessage());
-//                    model.addAttribute("studentName", task.getUser().getName());
-//                    model.addAttribute("taskStage", task.getStage());
-//                    if (task.getFiles() == null){
-//                        model.addAttribute("taskUniqueGroupCode", "Не отправлен");
-//                    }else {
-//                        model.addAttribute("taskUniqueGroupCode", task.getFiles().getUniqueGroupCode());
-//                    }
-//                    model.addAttribute("taskDeadline", task.getDeadline());
-//                }
-//                System.out.println(numberGroupsList);
-//                model.addAttribute("allTasks", allTasks);
                 System.out.println(allTasks);
             }
-
-//            System.out.println(model.getAttribute("numberGroups"));
         }else{
             model.addAttribute("tasks", taskRepository.findAllByUserId(userService.getUserByPrincipal(principal).getId()));
             System.out.println(taskRepository.findAllByUserId(userService.getUserByPrincipal(principal).getId()));
@@ -106,7 +85,6 @@ public class personalAccountController {
                 System.out.println(task);
                 taskRepository.save(task);
                 model.addAttribute("tasks", taskRepository.findAll());
-//                System.out.println(taskRepository.findAllTasksWithReplacedNull());
             }
         }
 
@@ -123,7 +101,6 @@ public class personalAccountController {
             desiredTask.setStage("Задача выполнена");
             taskRepository.save(desiredTask);
         }
-//        desiredTask = curentTask.get();
 
         return "redirect:/personalAccount";
     }
