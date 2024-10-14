@@ -19,19 +19,8 @@ import java.util.stream.Collectors;
 @Controller
 @RequiredArgsConstructor
 public class LoginController {
-    private final UserService userService;
 
-//    @GetMapping("/login")
-//    public String login(Model model, Principal principal, @RequestParam(name = "error", required = false) String error, @RequestParam(name = "logout", required = false) String logout){
-//        model.addAttribute("user", userService.getUserByPrincipal(principal));
-//        if (error != null){
-//            model.addAttribute("errorMessage", "Нкверный логин или пароль");
-//        } else if (logout != null) {
-//            model.addAttribute("errorMessage", "Успешный вход");
-////            return "redirect:/personalAccount";
-//        }
-//        return "login";
-//    }
+    private final UserService userService;
 
     @GetMapping("/login")
     public String login(@Valid User user, BindingResult bindingResult, Model model, Principal principal, @RequestParam(name = "error", required = false) String error, @RequestParam(name = "logout", required = false) String logout) {
