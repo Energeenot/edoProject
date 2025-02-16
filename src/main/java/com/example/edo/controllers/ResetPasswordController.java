@@ -28,7 +28,8 @@ public class ResetPasswordController {
     }
 
     @PostMapping("/resetPassword")
-    public String supplementPassword(Model model, Principal principal, @RequestParam String password, HttpSession httpSession){
+    public String supplementPassword(Model model, Principal principal, @RequestParam String password,
+                                     HttpSession httpSession){
         model.addAttribute("user", userService.getUserByPrincipal(principal));
         if (password.isEmpty()){
             model.addAttribute("message", "Введите пароль");
