@@ -23,7 +23,9 @@ public class LoginController {
     private final UserService userService;
 
     @GetMapping("/login")
-    public String login(@Valid User user, BindingResult bindingResult, Model model, Principal principal, @RequestParam(name = "error", required = false) String error, @RequestParam(name = "logout", required = false) String logout) {
+    public String login(@Valid User user, BindingResult bindingResult, Model model, Principal principal,
+                        @RequestParam(name = "error", required = false) String error, @RequestParam(name = "logout",
+            required = false) String logout) {
         model.addAttribute("user", user);
         if (bindingResult.hasErrors()) {
             Collector<FieldError, ?, Map<String, String>> collector = Collectors.toMap(
