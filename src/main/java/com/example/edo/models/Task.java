@@ -2,24 +2,20 @@ package com.example.edo.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
 @Entity
 @Table(name="task")
 @Data
-@Setter
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "studentId", referencedColumnName = "id")
+    @JoinColumn(name = "student_id", referencedColumnName = "id")
     private User user;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "uniqueGroupCode", referencedColumnName = "uniqueGroupCode")
+    @JoinColumn(name = "unique_group_code", referencedColumnName = "unique_group_code")
     private Files files;
     @Column(name = "message")
     private String message;
