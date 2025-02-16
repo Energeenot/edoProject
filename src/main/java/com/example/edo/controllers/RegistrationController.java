@@ -1,13 +1,10 @@
 package com.example.edo.controllers;
 
 import com.example.edo.models.User;
-import com.example.edo.repositories.UserRepository;
 import com.example.edo.services.UserService;
 import jakarta.servlet.http.HttpSession;
-
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,16 +13,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.security.Principal;
-import java.util.stream.Collectors;
 import java.util.Map;
 import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
 public class RegistrationController {
     private final UserService userService;
-    @Autowired
-    private UserRepository userRepository;
 
     @GetMapping("/registration")
     public String registration(Model model, Principal principal){
@@ -46,12 +41,6 @@ public class RegistrationController {
             Map<String, String> errorsMap = bindingResult.getFieldErrors().stream().collect(collector);
             model.mergeAttributes(errorsMap);
             return "registration";
-//            bindingResult.getFieldErrors().stream().collect(Collectors.toMap(
-//                    fieldError -> fieldError.getField() + "Error",
-//                    FieldError::getDefaultMessage
-//            ))
-//            model.addAttribute("bindingResult", bindingResult);
-//            return "registration";
         } else {
             String message = userService.createUser(user);
             if (message.equals("true")){
