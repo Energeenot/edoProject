@@ -1,6 +1,7 @@
 package com.example.edo.controllers;
 
-import com.example.edo.mailSender.Sender;
+import com.example.edo.dto.MessageDto;
+import com.example.edo.kafka.SenderProducer;
 import com.example.edo.models.Task;
 import com.example.edo.models.User;
 import com.example.edo.repositories.FilesRepository;
@@ -22,13 +23,13 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
-import java.util.*;
+import java.util.Base64;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -41,32 +42,36 @@ public class ValidatorAddController {
     private static String UPLOAD_FOLDER = "src/main/webapp/uploads/";
     @Autowired
     private FilesRepository filesRepository;
-    Sender sender = new Sender();
-    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    private static final Pattern EMAIL_PATTERN = Pattern
+            .compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
     private final TaskRepository taskRepository;
+    private final SenderProducer producer;
 
 
     @GetMapping("/validator-add")
-    public String validatorAdd(Model model, Principal principal, @RequestParam("taskId") String strTaskId, HttpSession session){
+    public String validatorAdd(Model model, Principal principal, @RequestParam("taskId") String strTaskId,
+                               HttpSession session) {
         model.addAttribute("user", userService.getUserByPrincipal(principal));
         session.setAttribute("taskId", strTaskId);
         return "validator-add";
     }
 
     @PostMapping("/validator-add")
-    public String uploadFile(@RequestParam("file") List<MultipartFile> files, Model model, Authentication authentication, HttpServletRequest request, Principal principal, HttpSession session) throws IOException {
+    public String uploadFile(@RequestParam("file") List<MultipartFile> files, Model model,
+                             Authentication authentication, HttpServletRequest request, Principal principal,
+                             HttpSession session) throws IOException {
         model.addAttribute(userService.getUserByPrincipal(principal));
         String uniqueID = UUID.randomUUID().toString();
 
         Long taskId = Long.parseLong((String) session.getAttribute("taskId"));
-        Optional<Task>  task = taskRepository.findTaskById(taskId);
+        Optional<Task> task = taskRepository.findTaskById(taskId);
         Task desiredTask;
 
         if (files.isEmpty()) {
             model.addAttribute("message", "Пожалуйста выберите файлы для отправки");
             return "validator-add";
         }
-        try{
+        try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(uniqueID.getBytes(StandardCharsets.UTF_8));
             String uniqueFileName = Base64.getEncoder().encodeToString(hash) + "_" + uniqueID;
@@ -83,12 +88,12 @@ public class ValidatorAddController {
                 newFiles.setSender(currentUser);
                 filesRepository.save(newFiles);
                 model.addAttribute("message", "Успешная отправка файлов");
-                if (task.isPresent()){
+                if (task.isPresent()) {
                     desiredTask = task.get();
                     desiredTask.setFiles(newFiles);
                     desiredTask.setStage("Документы отправлены");
                     taskRepository.save(desiredTask);
-                }else {
+                } else {
                     model.addAttribute("message", "Произошла ошибка, id задачи не привязался, попробуйте позже");
                     return "validator-add";
                 }
@@ -104,11 +109,19 @@ public class ValidatorAddController {
         String teacherMail = desiredTask.getSender().getMail();
         String fio = desiredTask.getUser().getName();
         String numberGroup = desiredTask.getUser().getNumberGroup();
-        if (!EMAIL_PATTERN.matcher(teacherMail).matches()){
+        if (!EMAIL_PATTERN.matcher(teacherMail).matches()) {
             model.addAttribute("message", "Почта преподавателя не указана");
             return "validator-add";
         } else {
-            sender.sendNotificationOfNewDocuments(uniqueID, teacherMail, fio, numberGroup, messageToTeacher);
+
+            producer.sendNotificationOfNewDocuments(MessageDto.builder()
+                    .uniqueCode(uniqueID)
+                    .toEmail(teacherMail)
+                    .fio(fio)
+                    .numberGroup(numberGroup)
+                    .messageToTeacher(messageToTeacher)
+                    .build());
+
         }
 
 
@@ -182,8 +195,7 @@ public class ValidatorAddController {
         return "validator-add";
     }
 
-    public  void saveZipArchive(List<MultipartFile> files, String uniqueFileName) throws IOException {
-//        String uniqueID = UUID.randomUUID().toString();
+    public void saveZipArchive(List<MultipartFile> files, String uniqueFileName) throws IOException {
         String zipFileName = UPLOAD_FOLDER + uniqueFileName;
 
         try (FileOutputStream fos = new FileOutputStream(zipFileName);
@@ -205,5 +217,4 @@ public class ValidatorAddController {
             }
         }
     }
-    
 }
