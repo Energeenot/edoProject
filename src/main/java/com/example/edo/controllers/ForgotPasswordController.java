@@ -1,6 +1,7 @@
 package com.example.edo.controllers;
 
-import com.example.edo.mailSender.Sender;
+import com.example.edo.dto.MessageDto;
+import com.example.edo.kafka.SenderProducer;
 import com.example.edo.models.User;
 import com.example.edo.repositories.UserRepository;
 import com.example.edo.services.UserService;
@@ -18,8 +19,10 @@ import java.util.UUID;
 @Controller
 @RequiredArgsConstructor
 public class ForgotPasswordController {
+
     private final UserService userService;
     private final UserRepository userRepository;
+    private final SenderProducer producer;
 
     @GetMapping("/forgotPassword")
     public String forgotPassword(Model model, Principal principal){
@@ -41,8 +44,12 @@ public class ForgotPasswordController {
         }
         String token = UUID.randomUUID().toString();
 //        надо ли записывать в бд этот токен, создать для него таблицу с ссылкой на юзера
-        Sender sender = new Sender();
-        sender.sendNotificationOfResetPassword(token, mail);
+
+        producer.sendNotificationOfResetPassword(MessageDto.builder()
+                .token(token)
+                .toEmail(mail)
+                .build());
+
         httpSession.setAttribute("userMail", mail);
         httpSession.setAttribute("token", token);
         return "redirect:/checkCode";
