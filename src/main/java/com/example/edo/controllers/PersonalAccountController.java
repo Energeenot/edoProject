@@ -1,6 +1,7 @@
 package com.example.edo.controllers;
 
-import com.example.edo.mailSender.Sender;
+import com.example.edo.dto.MessageDto;
+import com.example.edo.kafka.SenderProducer;
 import com.example.edo.models.Task;
 import com.example.edo.models.User;
 import com.example.edo.repositories.TaskRepository;
@@ -23,6 +24,7 @@ public class PersonalAccountController {
     private final UserService userService;
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
+    private final SenderProducer producer;
 
     @GetMapping("/personalAccount")
     public String personalAccount(Principal principal, Model model){
@@ -39,7 +41,8 @@ public class PersonalAccountController {
                 System.out.println(allTasks);
             }
         }else{
-            model.addAttribute("tasks", taskRepository.findAllByUserId(userService.getUserByPrincipal(principal).getId()));
+            model.addAttribute("tasks", taskRepository.findAllByUserId(userService
+                    .getUserByPrincipal(principal).getId()));
             System.out.println(taskRepository.findAllByUserId(userService.getUserByPrincipal(principal).getId()));
         }
         return "personalAccount";
@@ -67,7 +70,8 @@ public class PersonalAccountController {
     }
 
     @PostMapping("/personalAccount/createTask")
-    public String createTask(@RequestParam List<String> selectedGroups, @RequestParam String message, @RequestParam String deadline, Model model, Principal principal){
+    public String createTask(@RequestParam List<String> selectedGroups, @RequestParam String message,
+                             @RequestParam String deadline, Model model, Principal principal){
         model.addAttribute("user", userService.getUserByPrincipal(principal));
         List<String> numberGroups = userRepository.findAllNumberGroup();
         model.addAttribute("numberGroups", numberGroups);
@@ -118,7 +122,8 @@ public class PersonalAccountController {
     }
 
     @PostMapping("/personalAccount/feedback")
-    public String feedbackToStudent(Model model, Principal principal, @RequestParam String feedbackTaskId, @RequestParam String feedbackInput){
+    public String feedbackToStudent(Model model, Principal principal, @RequestParam String feedbackTaskId,
+                                    @RequestParam String feedbackInput){
         model.addAttribute("user", userService.getUserByPrincipal(principal));
         Optional<Task> currentTask = taskRepository.findTaskById(Long.parseLong((String) feedbackTaskId));
         Task desiredTask;
@@ -128,8 +133,13 @@ public class PersonalAccountController {
             taskRepository.save(desiredTask);
             String studentMail = desiredTask.getUser().getMail();
             String teacherName = desiredTask.getSender().getName();
-            Sender sender = new Sender();
-            sender.sendFeedbackToStudent(studentMail, teacherName, feedbackInput);
+
+            producer.sendFeedback(MessageDto.builder()
+                    .teacherName(teacherName)
+                    .toEmail(studentMail)
+                    .feedback(feedbackInput)
+                    .build());
+
         }
         return "redirect:/personalAccount";
     }
