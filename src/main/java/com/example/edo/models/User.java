@@ -3,11 +3,8 @@ package com.example.edo.models;
 import com.example.edo.models.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
-import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -15,9 +12,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-@Getter
 @Entity
-@Table(name="user")
+@Table(name="users")
 @Data
 public class User implements UserDetails {
     @Id
@@ -38,25 +34,11 @@ public class User implements UserDetails {
     private String password;
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role")
     private Set<Role> roles = new HashSet<>();
-    @Column(name = "numberGroup")
+    @Column(name = "number_group")
     private String numberGroup;
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setMail(String mail) {
-        this.mail = mail;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -95,4 +77,8 @@ public class User implements UserDetails {
     public boolean isTeacher(){
         return roles.contains(Role.ROLE_teacher);
     }
+
+    //todo: переделать данную модель в модель доп информации о пользователе, не хранить здесь пароль,
+    // при регистрации пользователя отправлять запрос в сервис аутентификации с логином и паролем,
+    // а дополнительные данные(номер группы, фио, и тд) хранить здесь
 }
