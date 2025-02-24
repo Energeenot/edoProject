@@ -77,7 +77,7 @@
 
     <!-- начало футера -->
 
-    <div class="Conteiner">
+    <div class="Container">
         <div class="content">
             <#nested/>
         </div>
