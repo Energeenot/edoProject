@@ -12,10 +12,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -25,6 +27,12 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
     private final AuthClientService authClientService;
+    private final RequestMatcher publicPaths;
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        return publicPaths.matches(request);
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -45,25 +53,30 @@ public class JwtFilter extends OncePerRequestFilter {
 
                         accessToken = tokenResponse.getAccessToken();
 
+                        System.out.println("Cookie " + Arrays.toString(request.getCookies()));
+
                         log.info("JWT успешно обновлён");
                     } catch (Exception e) {
                         log.error("Ошибка при обновлении JWT, выход пользователя из системы," +
                                 " сообщение об исключении: {}", e.getMessage());
-                        response.sendRedirect("/login?error=expired");
+                        response.sendRedirect("/login");  // ?error=expired
                         return;
                     }
                 } else {
                     log.warn("Нет Refresh Token, перенаправляем на логин");
-                    response.sendRedirect("/login?error=expired");
+                    response.sendRedirect("/login"); // ?error=expired
                     return;
                 }
             }
 
             String email = jwtProvider.getEmailFromToken(accessToken);
+            String role = jwtProvider.getRoleFromToken(accessToken);
+
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(email, null, List.of(
-                            new SimpleGrantedAuthority("ROLE_USER")));
+                            new SimpleGrantedAuthority(role)));
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            log.info("Authentication set: {}", SecurityContextHolder.getContext().getAuthentication());
         }
 
         filterChain.doFilter(request, response);
