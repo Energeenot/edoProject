@@ -15,10 +15,12 @@
             <div class="container-personalData">
                 <#--            <#if user.name??>-->
                  <label>ФИО пользователя:
-                    <input type="text" name="name" value="<#if user.name??>${user.name}</#if>">
+                    <input type="text" name="name" value="<#if user.fullName??>${user.fullName}</#if>">
                 </label><br>
-                Эл. почта <input type="email" name="mail" value="<#if user.name??>${user.mail}</#if>"><br>
-                № группы <input type="text" name="numberGroup" value="<#if user.numberGroup??>${user.numberGroup}</#if>"><br>
+                Эл. почта <input type="email" name="mail" value="<#if email??>${email}</#if>"><br>
+                <#if user.isStudent()>
+                    № группы <input type="text" name="numberGroup" value="<#if user.numberGroup??>${user.numberGroup}</#if>"><br>
+                </#if>
                 <#if message??>
                     <div style="color: red" class="invalid-feedback">
                         ${message}
