@@ -1,9 +1,9 @@
 package com.example.edo.services;
 
 import com.example.edo.dto.AuthRequest;
+import com.example.edo.dto.RegistrationResponse;
 import com.example.edo.dto.TokenResponse;
 import com.example.edo.feign.AuthFeignClient;
-import com.example.edo.models.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -38,13 +38,13 @@ public class AuthClientService {
 
     }
 
-    public String registration(User user) {
-        AuthRequest request = new AuthRequest(user.getMail(), user.getPassword());
+    public RegistrationResponse registration(String email, String password) {
+        AuthRequest request = new AuthRequest(email, password);
         try {
-            log.info("Попытка регистрации пользователя с почтой: {}", user.getMail());
+            log.info("Попытка регистрации пользователя с почтой: {}", email);
             return authFeignClient.registration(request);
         } catch (Exception e) {
-            log.error("Ошибка регистрации: {} для пользователя с почтой {}", e.getMessage(), user.getMail(), e);
+            log.error("Ошибка регистрации: {} для пользователя с почтой {}", e.getMessage(), email, e);
             throw new RuntimeException("Ошибка регистрации: " + e.getMessage());
         }
     }
