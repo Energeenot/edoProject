@@ -8,14 +8,14 @@
     <h1>Регистрация</h1>
     <form action="/registration" method="post">
         <label>ФИО пользователя:</label>
-        <input type="text" name="name" class="${(nameError??)?string('is-invalid', '')}" style="font-family: 'Andika', sans-serif;" value="<#if user.name??>${user.name}</#if>"><br>
+        <input type="text" name="fullName" class="${(nameError??)?string('is-invalid', '')}" style="font-family: 'Andika', sans-serif;" value="<#if user.fullName??>${user.fullName}</#if>"><br>
         <#if nameError??>
             <div style="color: red" class = "invalid-feedback">
                 ${nameError}
             </div>
         </#if>
         <label>Эл. почта </label>
-        <input name="mail" value="<#if user.mail??>${user.mail}</#if>"><br>
+        <input name="email" value="<#if email??>${email}</#if>"><br>
         <#if mailError??>
             <div style="color: red" class="invalid-feedback">
                 ${mailError}
