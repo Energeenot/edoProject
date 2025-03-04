@@ -2,6 +2,7 @@ package com.example.edo.feign;
 
 import com.example.edo.configurations.FeignConfig;
 import com.example.edo.dto.AuthRequest;
+import com.example.edo.dto.RegistrationResponse;
 import com.example.edo.dto.TokenResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,5 +19,5 @@ public interface AuthFeignClient {
     TokenResponse refreshToken(@RequestParam("refreshToken") String refreshToken);
 
     @PostMapping(value = "${auth.service.url.registration}")
-    String registration(@RequestBody AuthRequest authRequest);
+    RegistrationResponse registration(@RequestBody AuthRequest authRequest);
 }
