@@ -1,17 +1,15 @@
 package com.example.edo.controllers;
 
-import com.example.edo.dto.MessageDto;
-import com.example.edo.kafka.SenderProducer;
+import com.example.edo.models.Files;
 import com.example.edo.models.Task;
 import com.example.edo.models.User;
-import com.example.edo.repositories.FilesRepository;
-import com.example.edo.repositories.TaskRepository;
+import com.example.edo.services.FilesService;
+import com.example.edo.services.NotificationService;
+import com.example.edo.services.TaskService;
 import com.example.edo.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.io.FilenameUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,201 +18,60 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.Principal;
-import java.util.Base64;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 @Controller
 @RequiredArgsConstructor
 public class ValidatorAddController {
-    private final UserService userService;
 
-    private static String UPLOAD_FOLDER = "src/main/webapp/uploads/";
-    @Autowired
-    private FilesRepository filesRepository;
-    private static final Pattern EMAIL_PATTERN = Pattern
-            .compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
-    private final TaskRepository taskRepository;
-    private final SenderProducer producer;
+    private final UserService userService;
+    private final TaskService taskService;
+    private final FilesService filesService;
+    private final NotificationService notificationService;
 
 
     @GetMapping("/validator-add")
-    public String validatorAdd(Model model, Principal principal, @RequestParam("taskId") String strTaskId,
-                               HttpSession session) {
-        model.addAttribute("user", userService.getUserByPrincipal(principal));
+    public String validatorAdd(Model model, @RequestParam("taskId") String strTaskId,
+                               HttpSession session, HttpServletRequest request) {
+        model.addAttribute("user", userService.getUserByRequest(request));
         session.setAttribute("taskId", strTaskId);
         return "validator-add";
     }
 
     @PostMapping("/validator-add")
     public String uploadFile(@RequestParam("file") List<MultipartFile> files, Model model,
-                             Authentication authentication, HttpServletRequest request, Principal principal,
-                             HttpSession session) throws IOException {
-        model.addAttribute(userService.getUserByPrincipal(principal));
-        String uniqueID = UUID.randomUUID().toString();
+                             Authentication authentication, HttpServletRequest request,
+                             HttpSession session) {
 
-        Long taskId = Long.parseLong((String) session.getAttribute("taskId"));
-        Optional<Task> task = taskRepository.findTaskById(taskId);
-        Task desiredTask;
+        if (authentication == null || authentication.getPrincipal() == null) {
+            return "redirect:/login";
+        }
+
+        User currentUser = userService.getUserByRequest(request);
+        model.addAttribute("user", currentUser);
 
         if (files.isEmpty()) {
             model.addAttribute("message", "Пожалуйста выберите файлы для отправки");
             return "validator-add";
         }
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(uniqueID.getBytes(StandardCharsets.UTF_8));
-            String uniqueFileName = Base64.getEncoder().encodeToString(hash) + "_" + uniqueID;
-            uniqueFileName = uniqueFileName.replaceAll("/", "_");
-            uniqueFileName = uniqueFileName + ".zip";
 
-            saveZipArchive(files, uniqueFileName);
+        String uniqueID = UUID.randomUUID().toString();
+        Long taskId = Long.parseLong((String) session.getAttribute("taskId"));
 
-            if (authentication != null && authentication.getPrincipal() != null) {
-                com.example.edo.models.Files newFiles = new com.example.edo.models.Files();
-                newFiles.setUniqueName(uniqueFileName);
-                newFiles.setUniqueGroupCode(uniqueID);
-                User currentUser = (User) authentication.getPrincipal();
-                newFiles.setSender(currentUser);
-                filesRepository.save(newFiles);
-                model.addAttribute("message", "Успешная отправка файлов");
-                if (task.isPresent()) {
-                    desiredTask = task.get();
-                    desiredTask.setFiles(newFiles);
-                    desiredTask.setStage("Документы отправлены");
-                    taskRepository.save(desiredTask);
-                } else {
-                    model.addAttribute("message", "Произошла ошибка, id задачи не привязался, попробуйте позже");
-                    return "validator-add";
-                }
-            } else {
-                // Обработка ситуации, когда Authentication или Principal равны null
-                return "redirect:/login";
-            }
-
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-        String messageToTeacher = request.getParameter("messageToTeacher");
-        String teacherMail = desiredTask.getSender().getMail();
-        String fio = desiredTask.getUser().getName();
-        String numberGroup = desiredTask.getUser().getNumberGroup();
-        if (!EMAIL_PATTERN.matcher(teacherMail).matches()) {
-            model.addAttribute("message", "Почта преподавателя не указана");
+        Task desiredTask = taskService.getTaskById(taskId);
+        if (desiredTask == null) {
+            model.addAttribute("message", "Произошла ошибка, id задачи не привязался, попробуйте позже");
             return "validator-add";
-        } else {
-
-            producer.sendNotificationOfNewDocuments(MessageDto.builder()
-                    .uniqueCode(uniqueID)
-                    .toEmail(teacherMail)
-                    .fio(fio)
-                    .numberGroup(numberGroup)
-                    .messageToTeacher(messageToTeacher)
-                    .build());
-
         }
 
+        String uniqueFileName = filesService.saveZippedFiles(uniqueID, files);
+        Files savedFiles = filesService.saveFiles(uniqueFileName, uniqueID, currentUser);
+        taskService.updateTaskWithFiles(desiredTask, savedFiles);
 
-//        for (MultipartFile file : files){
-//            try {
-//                byte[] bytes = file.getBytes();
-//
-//            String originalFilename = file.getOriginalFilename();
-//            String extension = FilenameUtils.getExtension(originalFilename);
-//
-//            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-//                assert originalFilename != null;
-//                byte[] hash = digest.digest(originalFilename.getBytes(StandardCharsets.UTF_8));
-//            String uniqueFileName = Base64.getEncoder().encodeToString(hash) + "_" + uniqueID;
-//            uniqueFileName = uniqueFileName.replaceAll("/", "_");
-//            uniqueFileName = uniqueFileName + "." + extension;
-//
-//            Path path = Paths.get(UPLOAD_FOLDER);
-//            Path filePath = path.resolve(uniqueFileName);
-//            Files.write(filePath, bytes);
-//            model.addAttribute("message", "Успешная отправка файлов");
-//
-//                // Создание папки пользователя (вместо UPLOAD_FOLDER может быть другой путь)
-////                Path userDirectory = Paths.get(UPLOAD_FOLDER + "user_" + uniqueID);
-////                if (!Files.exists(userDirectory)) {
-////                    Files.createDirectory(userDirectory);
-////                }
-////                проверка на аутентификацию
-//            if (authentication != null && authentication.getPrincipal() != null) {
-//                com.example.edo.models.Files newFiles = new com.example.edo.models.Files();
-//                newFiles.setUniqueName(uniqueFileName);
-//                newFiles.setUniqueGroupCode(uniqueID);
-//                User currentUser = (User) authentication.getPrincipal();
-//                newFiles.setSender(currentUser);
-//                filesRepository.save(newFiles);
-//                if (task.isPresent()){
-//                    desiredTask = task.get();
-//                    desiredTask.setFiles(newFiles);
-//                    desiredTask.setStage("Документы отправлены");
-//                    taskRepository.save(desiredTask);
-//                }else {
-//                    model.addAttribute("message", "Произошла ошибка, id задачи не привязался, попробуйте позже");
-//                    return "validator-add";
-//                }
-//            } else {
-//                // Обработка ситуации, когда Authentication или Principal равны null
-//                return "redirect:/login";
-//            }
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                model.addAttribute("message", "Ошибка при отправке файлов");
-//            } catch (NoSuchAlgorithmException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
+        notificationService.notifyTeacher(desiredTask, uniqueID, request.getParameter("messageToTeacher"));
 
-//        String messageToTeacher = request.getParameter("messageToTeacher");
-        // через сессию передать преподу сообщение не получится, так как у него будет другая сессия, нужно скорее всего бд
-
-        //todo: выключить впн перед отправкой письма
-
-//        assert desiredTask != null;
-//        String teacherMail = desiredTask.getSender().getMail();
-//        if (!EMAIL_PATTERN.matcher(teacherMail).matches()){
-//            model.addAttribute("message", "Укажите почту преподавателя");
-//            return "validator-add";
-//        } else {
-//            sender.sendNotificationOfNewDocuments(uniqueID, teacherMail);
-//        }
+        model.addAttribute("message", "Успешная отправка файлов");
         return "validator-add";
-    }
-
-    public void saveZipArchive(List<MultipartFile> files, String uniqueFileName) throws IOException {
-        String zipFileName = UPLOAD_FOLDER + uniqueFileName;
-
-        try (FileOutputStream fos = new FileOutputStream(zipFileName);
-             ZipOutputStream zos = new ZipOutputStream(fos)) {
-
-            for (MultipartFile file : files) {
-                String originalFilename = file.getOriginalFilename();
-                String extension = FilenameUtils.getExtension(originalFilename);
-
-                // Создаем имя файла в архиве, включая его оригинальное расширение
-                String zipEntryName = originalFilename + "." + extension;
-
-                // Создаем новую запись для файла в архиве
-                zos.putNextEntry(new ZipEntry(zipEntryName));
-
-                // Записываем содержимое файла в архив
-                zos.write(file.getBytes());
-                zos.closeEntry();
-            }
-        }
     }
 }
