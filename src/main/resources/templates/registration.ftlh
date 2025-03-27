@@ -14,6 +14,8 @@
                 ${nameError}
             </div>
         </#if>
+        <label>№ группы</label>
+        <input type="text" name="numberGroup" value="<#if user.numberGroup??>${user.numberGroup}</#if>"><br>
         <label>Эл. почта </label>
         <input name="email" value="<#if email??>${email}</#if>"><br>
         <#if mailError??>
