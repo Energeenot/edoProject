@@ -28,7 +28,7 @@
                 </#if>
 
                 <input type="hidden" name="_csrf" value="${_csrf.token}">
-                <input type="submit" value="Дополнить информацию">
+<#--                <input type="submit" value="Дополнить информацию">-->
             </div>
         </form>
     </div>
@@ -55,7 +55,7 @@
                                     <tr class="teacher-task-row" data-task-id="${task.id?string}">
                                         <td>${task.id}</td>
                                         <td>${task.message}</td>
-                                        <td>${task.user.name}</td>
+                                        <td>${task.user.fullName}</td>
                                         <td>${task.stage}</td>
                                         <td>
                                             <#if task.files?exists && task.files.uniqueGroupCode?exists>
@@ -132,7 +132,7 @@
                                 <tr class="task-row" data-task-id="${task.id?string}">
                                     <td>${task.id}</td>
                                     <td>${task.message}</td>
-                                    <td>${task.sender.name}</td>
+                                    <td>${task.sender.fullName}</td>
                                     <td>${task.stage}</td>
                                     <td>
                                         <#if task.files?exists && task.files.uniqueGroupCode?exists>
