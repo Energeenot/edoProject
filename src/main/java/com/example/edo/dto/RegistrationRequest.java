@@ -11,6 +11,9 @@ public class RegistrationRequest {
     @NotBlank(message = "ФИО не может быть пустым")
     private String fullName;
 
+    @NotBlank(message = "Номер группы не может быть пустым")
+    private String numberGroup;
+
     @Email(message = "Некорректный email")
     @NotBlank(message = "Email не может быть пустым")
     private String email;
