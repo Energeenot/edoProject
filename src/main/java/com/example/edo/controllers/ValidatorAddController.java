@@ -7,6 +7,7 @@ import com.example.edo.services.FilesService;
 import com.example.edo.services.NotificationService;
 import com.example.edo.services.TaskService;
 import com.example.edo.services.UserService;
+import com.example.edo.services.s3.SelectelS3Client;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,6 +31,7 @@ public class ValidatorAddController {
     private final TaskService taskService;
     private final FilesService filesService;
     private final NotificationService notificationService;
+    private final SelectelS3Client s3Client;
 
 
     @GetMapping("/validator-add")
@@ -42,7 +45,7 @@ public class ValidatorAddController {
     @PostMapping("/validator-add")
     public String uploadFile(@RequestParam("file") List<MultipartFile> files, Model model,
                              Authentication authentication, HttpServletRequest request,
-                             HttpSession session) {
+                             HttpSession session) throws IOException {
 
         if (authentication == null || authentication.getPrincipal() == null) {
             return "redirect:/login";
@@ -65,7 +68,8 @@ public class ValidatorAddController {
             return "validator-add";
         }
 
-        String uniqueFileName = filesService.saveZippedFiles(uniqueID, files);
+        String uniqueFileName = filesService.generateUniqueFileName(uniqueID);
+        s3Client.uploadFile(files, uniqueFileName);
         Files savedFiles = filesService.saveFiles(uniqueFileName, uniqueID, currentUser);
         taskService.updateTaskWithFiles(desiredTask, savedFiles);
 
